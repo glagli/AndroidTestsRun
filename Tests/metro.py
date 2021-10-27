@@ -1,4 +1,4 @@
-def AvtoTestMetro (ser, MAC, DevicesName):
+def AvtoTest (ser, MAC, DevicesName):
     import uiautomator2 as u2
     from time import sleep
     import requests
@@ -95,7 +95,7 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                 else:
                     print(f"{NowDate()}  Кептив не отработал.Тест завершен.")
                     f.write(f"{NowDate()}  Кептив не отработал.Тест завершен.\n")
-                    SendMessage(f"{DevicesName}: 🔥 {ssid}: Автотест упал")
+                    SendMessage(f"{DevicesName}: 🔥 {ssid}: Кептив не отработал.Тест завершен")
                 return
 
             # -- Нажатие на "Войти в интернет"
@@ -122,7 +122,7 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                 '//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View[1]')
             ButtonX2 = d.xpath(
                 '//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[1]')
-            ButtonX3 = d.xpath('//*[@text="Wi-Fi.ru"]/android.view.View[3]/android.view.View[1]')
+            # ButtonX3 = d.xpath('//*[@text="Wi-Fi.ru"]/android.view.View[3]/android.view.View[1]')
 
             Next = d(text="Продолжить", className='android.widget.Button')
             Continue = d(text="Далее", className='android.widget.Button')
@@ -183,18 +183,18 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                     print(f"{NowDate()}  Нажат крестик вид №2")
                     f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                     sleep(6)
-                elif ButtonX3.exists:
-                    if DevicesName == "XiaomiMi9":
-                        d.click(954, 500)
-                    if DevicesName == "XiaomiRedmiNote9":
-                        ButtonX3.click_exists(5)
-                        # d.click(980, 490)
-                    if DevicesName == "Samsung A32":
-                        d.click(962, 273)
-                    # ButtonX3.click_exists(5)
-                    print(f"{NowDate()}  Нажат крестик №5 на портале")
-                    f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
-                    sleep(8)
+                # elif ButtonX3.exists:
+                #     if DevicesName == "XiaomiMi9":
+                #         d.click(954, 500)
+                #     if DevicesName == "XiaomiRedmiNote9":
+                #         ButtonX3.click_exists(5)
+                #         # d.click(980, 490)
+                #     if DevicesName == "Samsung A32":
+                #         d.click(962, 273)
+                #     # ButtonX3.click_exists(5)
+                #     print(f"{NowDate()}  Нажат крестик №5 на портале")
+                #     f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
+                #     sleep(8)
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")
@@ -207,6 +207,12 @@ def AvtoTestMetro (ser, MAC, DevicesName):
 
             # тут пока не трогал
             assert final_check.exists or final_check2.exists or SsidName.exists, f"{NowDate()}  Авторизация не пройдена.Не найдена кнопка на новостном портале"
+            if final_check.exists or final_check2.exists:
+                print(f"{NowDate()}  Иконка на портале найдена")
+                f.write(f"{NowDate()}  Иконка на портале найдена\n")
+            else:
+                print(f"{NowDate()}  Иконка на портале не найдена")
+                f.write(f"{NowDate()}  Иконка на портале не найдена\n")
 
             # -- На портале
             if DevicesName != 'Samsung A32':

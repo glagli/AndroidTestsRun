@@ -1,7 +1,7 @@
 from time import sleep
 
 
-def BrowserExit (d):
+def BrowserMiuiExit (d):
     d.click(1000, 200)
     sleep(1)
     clouseAll = d(resourceId="com.mi.globalbrowser:id/nav_close_all")
@@ -16,7 +16,7 @@ def BrowserExit (d):
     d.press("home")
 
 
-def SamsungExit (d):
+def BrowserChromeExit (d):
     d(resourceId="com.android.chrome:id/tab_switcher_button").click(2)
     sleep(1)
     d.xpath('//*[@resource-id="com.android.chrome:id/tab_switcher_toolbar"]/android.widget.LinearLayout[2]').click(2)

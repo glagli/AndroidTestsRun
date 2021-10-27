@@ -1,29 +1,21 @@
-from Functions.TelegramApi import Send_File
+import schedule
 from Functions.TelegramApi import SendMessage
+from Tests import SIMF_STEND
 from Functions.DataName import NowDate
-
-from Tests import EOS
-from Tests import metro
-from Tests import aeroexpress
-from Tests import cppk
-from Tests import cppk_Browser
-from Tests import MCC
-from Tests import Sola
-from Tests import metro_Home
-
+from time import sleep
+from schedule import every, repeat
 
 print(f"{NowDate()}  📣 :  Автотесты запущены📱")
 print(f"_____________________________________________________________")
-
+count = 0
 
 if __name__ == "__main__":
 
-    with open("logs/buttonClick.txt", 'w', encoding='utf-8') as f:
+    with open("../logs/buttonClick.txt", 'w', encoding='utf-8') as f:
         f.write(f"{NowDate()}  📣 :  Автотесты запущены🚀\n")
         f.write(f"_____________________________________________________________\n")
 
     # f = open("logs/buttonClick2.txt", 'w', encoding='utf-8')
-
     # XiaomiMi9
     # startTests(number1, MAC1, Name1)
     number1 = "be11611b"
@@ -47,32 +39,22 @@ if __name__ == "__main__":
     # @repeat(every(10).minutes, number1, MAC1, Name1)
     # @repeat(every(4).minutes, number3, MAC3, Name3)
 
+    @repeat(every(1).minutes, number2, MAC2, Name2)
     def startTestsXiaomiRedmi (number, mac, name):
-        # metro_Home.AvtoTest(number, mac, name)
-        # metro.AvtoTest(number, mac, name)
-        # cppk.AvtoTest(number, mac, name)
-        # MCC.AvtoTest(number, mac, name)
-        # aeroexpress.AvtoTest(number, mac, name)
-        # Sola.AvtoTest(number, mac, name)
-        # SIMF_STEND.AvtoTest(number, mac, name)
-
-
-        EOS.AvtoTest(number, mac, name, '_P_dit_enforta_street')
-        EOS.AvtoTest(number, mac, name, '_P_dit_akado')
-        EOS.AvtoTest(number, mac, name, '_P_dit_guest_wifi')
-        EOS.AvtoTest(number, mac, name, '_P_dit_Nauka 3')
-        EOS.AvtoTest(number, mac, name, '_P_dit_snb')
-        EOS.AvtoTest(number, mac, name, '_P_dit_almatel')
-        EOS.AvtoTest(number, mac, name, '_P_dit_beeline')
-        # EOS.AvtoTest(number, mac, name, '_P_dit_mts_vdnh')
-
+        # metro_Home.AvtoTestMetro(number, mac, name)
+        # metro.AvtoTestMetro(number, mac, name)
+        # cppk.AvtoTestMetro(number, mac, name)
+        # MCC.AvtoTestMetro(number, mac, name)
+        # aeroexpress.AvtoTestMetro(number, mac, name)
         # enforta.AvtoTestMetro(number, mac, name)
         # akado.AvtoTestMetro(number, mac, name)
         # guest_wifi.AvtoTestMetro(number, mac, name)
+        # Sola.AvtoTestMetro(number, mac, name)
         # nauka.AvtoTestMetro(number, mac, name)
         # snb.AvtoTestMetro(number, mac, name)
         # almatel.AvtoTestMetro(number, mac, name)
         # beeline.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name)
         # mts_vdnh.AvtoTestMetro(number, mac, name)
 
     def startTestsXiaomiMi (number, mac, name):
@@ -89,17 +71,8 @@ if __name__ == "__main__":
         # snb.AvtoTestMetro(number, mac, name)
         # almatel.AvtoTestMetro(number, mac, name)
         # beeline.AvtoTestMetro(number, mac, name)
-        # SIMF_STEND.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name)
         # mts_vdnh.AvtoTestMetro(number, mac, name)
-
-        EOS.AvtoTest(number, mac, name, '_P_dit_enforta_street')
-        EOS.AvtoTest(number, mac, name, '_P_dit_akado')
-        EOS.AvtoTest(number, mac, name, '_P_dit_guest_wifi')
-        EOS.AvtoTest(number, mac, name, '_P_dit_Nauka 3')
-        EOS.AvtoTest(number, mac, name, '_P_dit_snb')
-        EOS.AvtoTest(number, mac, name, '_P_dit_almatel')
-        EOS.AvtoTest(number, mac, name, '_P_dit_beeline')
-        # EOS.AvtoTest(number, mac, name, '_P_dit_mts_vdnh')
 
     def startTestsSamsung (number, mac, name):
         # metro_Home.AvtoTestMetro(number, mac, name)
@@ -115,35 +88,27 @@ if __name__ == "__main__":
         # snb.AvtoTestMetro(number, mac, name)
         # almatel.AvtoTestMetro(number, mac, name)
         # beeline.AvtoTestMetro(number, mac, name)
-        # SIMF_STEND.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name)
         # mts_vdnh.AvtoTestMetro(number, mac, name)
-
-        EOS.AvtoTest(number, mac, name, '_P_dit_enforta_street')
-        EOS.AvtoTest(number, mac, name, '_P_dit_akado')
-        EOS.AvtoTest(number, mac, name, '_P_dit_guest_wifi')
-        EOS.AvtoTest(number, mac, name, '_P_dit_Nauka 3')
-        EOS.AvtoTest(number, mac, name, '_P_dit_snb')
-        EOS.AvtoTest(number, mac, name, '_P_dit_almatel')
-        EOS.AvtoTest(number, mac, name, '_P_dit_beeline')
-        # EOS.AvtoTest(number, mac, name, '_P_dit_mts_vdnh')
 
 
 
 
 
     # d(text="Ошибка #900") - внедрить ( появилась после рекламы на мцк)
-    startTestsSamsung(number3, MAC3, Name3)
+    # startTestsSamsung(number3, MAC3, Name3)
     startTestsXiaomiRedmi(number2, MAC2, Name2)
     # startTestsXiaomiMi(number1, MAC1, Name1)
 
 
     SendMessage(f"✅Автотесты завершены📴")  # Отправка сообщения в телеграмм канал
-    Send_File("logs/buttonClick.txt")
+    # Send_File("logs/buttonClick.txt")
     print(f"{NowDate()}  📣 :  Автотесты завершены📱")
-
+    count += 1
+    print(count)
     # schedule.every(4).minutes.do(startTests, number=number2, mac=MAC2, name=Name2)
 
-    #
-    # while True:
-    #     schedule.run_pending()
-    #     sleep(1)
+
+    while True:
+        schedule.run_pending()
+        sleep(1)

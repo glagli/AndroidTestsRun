@@ -1,4 +1,4 @@
-def AvtoTestMetro (ser, MAC, DevicesName):
+def AvtoTest (ser, MAC, DevicesName, ssid):
     import uiautomator2 as u2
     from time import sleep
     import requests
@@ -7,23 +7,23 @@ def AvtoTestMetro (ser, MAC, DevicesName):
     from Functions.TelegramApi import SendMessage
     from Functions.TelegramApi import Send_screencast
     from Functions.LockDisplay import Lock
+    from Functions.TelegramApi import Send_File
     from Functions.Sumsung import Connect_WiFi
     from Functions.FindSsid import scroll
 
     with open("logs/buttonClick.txt", 'a', encoding='utf-8') as f:
 
         if DevicesName == "Samsung A32":
-            ssid = '_P_dit_beeline'
-            name_video = 'P_dit_beeline'
+            ssid = ssid
+            name_video = ssid[1::]
         else:
-            ssid = '_P_dit_beeline'
-            name_video = 'P_dit_beeline'
+            ssid = ssid
+            name_video = ssid[1::]
 
         flagBrowser = 0
         d = u2.connect_usb(ser)
         flag = 5
         flag2 = 10
-        f = open("logs/buttonClick.txt", 'w', encoding='utf-8')
 
         try:
             print(f"{NowDate()}  {DevicesName}: 📣 {ssid}:  Автотест запущен📱")
@@ -146,11 +146,11 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                     print(f"{NowDate()}  Нажат крестик вид №2")
                     f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                     sleep(5)
-                elif ButtonX3.exists:
-                    ButtonX3.click_exists(5)
-                    print(f"{NowDate()}  Нажат крестик №5 на портале")
-                    f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
-                    sleep(8)
+                # elif ButtonX3.exists:
+                #     ButtonX3.click_exists(5)
+                #     print(f"{NowDate()}  Нажат крестик №5 на портале")
+                #     f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
+                #     sleep(8)
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")
@@ -163,6 +163,12 @@ def AvtoTestMetro (ser, MAC, DevicesName):
 
             # тут пока не трогал
             assert final_check.exists or SsidName.exists, f"{NowDate()}  Авторизация не пройдена.Не найдена кнопка на новостном портале"
+            if final_check.exists:
+                print(f"{NowDate()}  Иконка на портале найдена")
+                f.write(f"{NowDate()}  Иконка на портале найдена\n")
+            else:
+                print(f"{NowDate()}  Иконка на портале не найдена")
+                f.write(f"{NowDate()}  Иконка на портале не найдена\n")
 
             # -- На портале
             if DevicesName != 'Samsung A32':
@@ -175,8 +181,8 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                 f.write(f"{NowDate()}  Доступ в интернет есть! \n")
                 flagBrowser = 1
             else:
-                print(f"{NowDate()} Доступа в интернет нет! Скрипт принудительно завершен ")
-                f.write(f"{NowDate()} Доступа в интернет нет! Скрипт принудительно завершен \n")
+                print(f"{NowDate()}  Доступа в интернет нет! Скрипт принудительно завершен ")
+                f.write(f"{NowDate()}  Доступа в интернет нет! Скрипт принудительно завершен \n")
                 SendMessage(f"{DevicesName}: 🔥 {ssid}: Автотест упал.Доступа в интернет нет!")
                 return
 

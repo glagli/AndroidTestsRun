@@ -1,4 +1,4 @@
-def AvtoTest (ser, MAC, DevicesName):
+def AvtoTestMetro (ser, MAC, DevicesName):
     import uiautomator2 as u2
     from time import sleep
     import requests
@@ -7,24 +7,23 @@ def AvtoTest (ser, MAC, DevicesName):
     from Functions.TelegramApi import SendMessage
     from Functions.TelegramApi import Send_screencast
     from Functions.LockDisplay import Lock
+    from Functions.TelegramApi import Send_File
     from Functions.Sumsung import Connect_WiFi
     from Functions.FindSsid import scroll
 
-
-    with open("logs/buttonClick.txt", 'a+', encoding='utf-8') as f:
+    with open("logs/buttonClick.txt", 'a', encoding='utf-8') as f:
 
         if DevicesName == "Samsung A32":
-            ssid = '_P_aeroexpress'
-            name_video = 'P_aeroexpress'
+            ssid = '_P_dit_guest_wifi'
+            name_video = 'P_dit_guest_wifi'
         else:
-            ssid = '_P_aeroexpress'
-            name_video = 'P_aeroexpress'
+            ssid = '_P_dit_guest_wifi'
+            name_video = 'P_dit_guest_wifi'
 
         flagBrowser = 0
         d = u2.connect_usb(ser)
         flag = 5
         flag2 = 10
-
 
         try:
             print(f"{NowDate()}  {DevicesName}: 📣 {ssid}:  Автотест запущен📱")
@@ -40,7 +39,6 @@ def AvtoTest (ser, MAC, DevicesName):
                 d.shell("am start -n com.android.settings/com.android.settings.wifi.WifiSettings")  # Переход в настройки
                 WIFI = d(text='Wi-Fi', className='android.widget.TextView')
                 WIFI.click_exists(3)
-
 
             d.shell('svc wifi enable')  # Включение Wi-Fi
 
@@ -105,7 +103,7 @@ def AvtoTest (ser, MAC, DevicesName):
                 if OpenSixtyMin.exists:
                     sleep(2)
                     # кнопка находится но неактивна в течении 5 сек. Нужен кликабле
-                    OpenSixtyMin.click_exists(15)
+                    OpenSixtyMin.click(2)
                     print(f"{NowDate()}  Нажата кнопка 'Войти в Интернет'")
                     f.write(f"{NowDate()}  Нажата кнопка 'Войти в Интернет'\n")
                     sleep(6)
@@ -118,17 +116,16 @@ def AvtoTest (ser, MAC, DevicesName):
                     flag -= 1
                     sleep(3)
                     continue
-
             # -- Прохождение рекламы
             ButtonX1 = d.xpath(
                 '//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View[1]')
             ButtonX2 = d.xpath(
                 '//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[1]')
-            # ButtonX3 = d.xpath('//*[@text="Wi-Fi.ru"]/android.view.View[3]/android.view.View[1]')
+            ButtonX3 = d.xpath('//*[@text="Wi-Fi.ru"]/android.view.View[3]/android.view.View[1]')
 
-            final_check2 = d(description="cabinet.wi-fi")
-            final_check = d.xpath('//*[@text="cabinet.wi-fi"]')
-            while not (final_check.exists or final_check2.exists or SsidName.exists):
+
+            final_check = d.xpath('//*[@content-desc="www.mos"]')
+            while not (final_check.exists or SsidName.exists):
                 # print(final_check.exists)
                 # print(final_check2.exists)
                 # print(SsidName.exists)
@@ -139,8 +136,8 @@ def AvtoTest (ser, MAC, DevicesName):
                     sleep(5)
                 elif ButtonX2.exists:
                     if DevicesName == "XiaomiMi9":
-                        # ButtonX2.click_exists(5)
-                        d.click(954, 500)
+                        ButtonX2.click_exists(5)
+                        # d.click(954, 500)
                     if DevicesName == "XiaomiRedmiNote9":
                         d.click(980, 490)
                     if DevicesName == "Samsung A32":
@@ -164,8 +161,8 @@ def AvtoTest (ser, MAC, DevicesName):
                     continue
 
             # тут пока не трогал
-            assert final_check.exists or final_check2.exists or SsidName.exists, f"{NowDate()}  Авторизация не пройдена.Не найдена кнопка на новостном портале"
-            if final_check.exists or final_check2.exists:
+            assert final_check.exists or SsidName.exists, f"{NowDate()}  Авторизация не пройдена.Не найдена кнопка на новостном портале"
+            if final_check.exists:
                 print(f"{NowDate()}  Иконка на портале найдена")
                 f.write(f"{NowDate()}  Иконка на портале найдена\n")
             else:

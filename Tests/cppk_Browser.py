@@ -1,4 +1,4 @@
-def AvtoTestMetro (ser, MAC, DevicesName):
+def AvtoTest (ser, MAC, DevicesName):
     import uiautomator2 as u2
     from time import sleep
     import requests
@@ -10,6 +10,7 @@ def AvtoTestMetro (ser, MAC, DevicesName):
     from Functions.Sumsung import Connect_WiFi
     from Functions.Browser import BrowserExit
     from Functions.Browser import SamsungExit
+    from Functions.FindSsid import scroll
 
     with open("logs/buttonClick.txt", 'a', encoding='utf-8') as f:
         flagBrowser = 0
@@ -45,16 +46,31 @@ def AvtoTestMetro (ser, MAC, DevicesName):
             # -- Подключение к SSID
             if DevicesName == "Samsung A32":
                 SsidName = d.xpath(f'//*[@text="{ssid}"]')
-                SsidName.click_exists(20)
-                sleep(7)
-                SsidName.click_exists(5)
-                print(f"{NowDate()}  SSID найден.Авторизация началась")
-                sleep(6)
+                if SsidName.exists:
+                    SsidName.click_exists(20)
+                    sleep(7)
+                    SsidName.click_exists(5)
+                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    sleep(6)
+                else:
+                    scroll(d, DevicesName)
+                    SsidName.click_exists(20)
+                    sleep(7)
+                    SsidName.click_exists(5)
+                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    sleep(6)
             else:
                 SsidName = d(text=f'{ssid}', className='android.widget.CheckedTextView')
-                SsidName.click_exists(20)
-                print(f"{NowDate()}  SSID найден.Авторизация началась")
-                sleep(6)
+                if SsidName.exists:
+                    SsidName.click_exists(20)
+                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    sleep(7)
+                else:
+                    scroll(d, DevicesName)
+                    sleep(3)
+                    SsidName.click_exists(20)
+                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    sleep(7)
 
             # -- Проверка взлёта кептива
             if DevicesName == "Samsung A32":
@@ -121,10 +137,10 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                     print(f"{NowDate()}  Нажат крестик вид №2")
                     f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                     sleep(5)
-                elif ButtonX3.exists:
-                    ButtonX3.click_exists(5)
-                    print(f"{NowDate()}  Нажат крестик №5 на портале")
-                    f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
+                # elif ButtonX3.exists:
+                #     ButtonX3.click_exists(5)
+                #     print(f"{NowDate()}  Нажат крестик №5 на портале")
+                #     f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")
@@ -137,6 +153,12 @@ def AvtoTestMetro (ser, MAC, DevicesName):
 
             # тут пока не трогал
             assert final_check.exists or final_check2.exists or SsidName.exists, f"{NowDate()}  Авторизация не пройдена.Не найдена кнопка на новостном портале"
+            if final_check.exists or final_check2.exists:
+                print(f"{NowDate()}  Иконка на портале найдена")
+                f.write(f"{NowDate()}  Иконка на портале найдена\n")
+            else:
+                print(f"{NowDate()}  Иконка на портале не найдена")
+                f.write(f"{NowDate()}  Иконка на портале не найдена\n")
 
             # -- На портале
             flagBrowser = 1
