@@ -1,17 +1,16 @@
 import schedule
 from Functions.TelegramApi import SendMessage
-from Tests import SIMF_STEND
+from SIMF_API import SIMF_STEND
 from Functions.DataName import NowDate
 from time import sleep
 from schedule import every, repeat
-
-print(f"{NowDate()}  📣 :  Автотесты запущены📱")
-print(f"_____________________________________________________________")
-count = 0
+from Functions import Schet
 
 if __name__ == "__main__":
-
-    with open("../logs/buttonClick.txt", 'w', encoding='utf-8') as f:
+    Schet.init()
+    print(f"{NowDate()}  📣 :  Автотесты запущены📱")
+    print(f"_____________________________________________________________")
+    with open("buttonClick.txt", 'w', encoding='utf-8') as f:
         f.write(f"{NowDate()}  📣 :  Автотесты запущены🚀\n")
         f.write(f"_____________________________________________________________\n")
 
@@ -74,7 +73,7 @@ if __name__ == "__main__":
         # mts_vdnh.AvtoTestMetro(number, mac, name)
 
 
-    @repeat(every(1).minutes, number3, MAC3, Name3)
+    @repeat(every(30).seconds, number3, MAC3, Name3)
     def startTestsSamsung (number, mac, name):
         # metro_Home.AvtoTestMetro(number, mac, name)
         # metro.AvtoTestMetro(number, mac, name)
@@ -102,11 +101,9 @@ if __name__ == "__main__":
     # startTestsXiaomiMi(number1, MAC1, Name1)
 
 
-    SendMessage(f"✅Автотесты завершены📴")  # Отправка сообщения в телеграмм канал
+    # SendMessage(f"✅Автотесты завершены📴")  # Отправка сообщения в телеграмм канал
     # Send_File("logs/buttonClick.txt")
-    print(f"{NowDate()}  📣 :  Автотесты завершены📱")
-    count += 1
-    print(count)
+    # print(f"{NowDate()}  📣 :  Автотесты завершены📱")
     # schedule.every(4).minutes.do(startTests, number=number2, mac=MAC2, name=Name2)
 
 

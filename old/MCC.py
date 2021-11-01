@@ -1,4 +1,4 @@
-def AvtoTest (ser, MAC, DevicesName):
+def AvtoTest (ser, MAC, DevicesName, ssid):
     import uiautomator2 as u2
     from time import sleep
     import requests
@@ -14,11 +14,11 @@ def AvtoTest (ser, MAC, DevicesName):
     with open("logs/buttonClick.txt", 'a', encoding='utf-8') as f:
 
         if DevicesName == "Samsung A32":
-            ssid = '_P_MCC_incarnet'
-            name_video = 'P_MCC_incarnet'
+            ssid = ssid
+            name_video = ssid[1::]
         else:
-            ssid = '_P_MCC_incarnet'
-            name_video = 'P_MCC_incarnet'
+            ssid = ssid
+            name_video = ssid[1::]
 
         flagBrowser = 0
         d = u2.connect_usb(ser)
@@ -206,7 +206,7 @@ def AvtoTest (ser, MAC, DevicesName):
             print(f"{NowDate()}  Сессия убита ✅")
             print(f"_____________________________________________________________")
             f.write(f"{NowDate()}  Сессия убита ✅\n")
-            print(f"_____________________________________________________________")
+            f.write(f"_____________________________________________________________\n")
             sleep(2)
             Send_screencast(f"screencasts/{DevicesName}_{name_video}.mp4", f'Скринкаст авторизация {DevicesName}\n{ssid}')
             sleep(10)

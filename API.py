@@ -14,9 +14,11 @@ number3 = "RF8R40BZQLP"
 MAC3 = '80-9f-f5-9c-71-30'
 Name3 = 'Samsung A32'
 
-d = u2.connect_usb(XiaomiMi9)
-d = u2.connect_usb(XiaomiRedmiNote9)
+# d = u2.connect_usb(XiaomiMi9)
+# d = u2.connect_usb(XiaomiRedmiNote9)
 d = u2.connect_usb(number3)
+
+print(d(text="Error 400: Bad Request").exists)
 
 # f = open("logs/buttonClick2.txt", 'w', encoding='utf-8')
 # # for i in range(1):
