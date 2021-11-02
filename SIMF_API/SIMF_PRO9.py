@@ -38,72 +38,21 @@ if __name__ == "__main__":
     # @repeat(every(10).minutes, number1, MAC1, Name1)
     # @repeat(every(4).minutes, number3, MAC3, Name3)
 
+
     @repeat(every(30).seconds, number2, MAC2, Name2)
     def startTestsXiaomiRedmi (number, mac, name):
-        # metro_Home.AvtoTestMetro(number, mac, name)
-        # metro.AvtoTestMetro(number, mac, name)
-        # cppk.AvtoTestMetro(number, mac, name)
-        # MCC.AvtoTestMetro(number, mac, name)
-        # aeroexpress.AvtoTestMetro(number, mac, name)
-        # enforta.AvtoTestMetro(number, mac, name)
-        # akado.AvtoTestMetro(number, mac, name)
-        # guest_wifi.AvtoTestMetro(number, mac, name)
-        # Sola.AvtoTestMetro(number, mac, name)
-        # nauka.AvtoTestMetro(number, mac, name)
-        # snb.AvtoTestMetro(number, mac, name)
-        # almatel.AvtoTestMetro(number, mac, name)
-        # beeline.AvtoTestMetro(number, mac, name)
-        SIMF_STEND.AvtoTestMetro(number, mac, name)
-        # mts_vdnh.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
+
 
     def startTestsXiaomiMi (number, mac, name):
-        # metro_Home.AvtoTestMetro(number, mac, name)
-        # metro.AvtoTestMetro(number, mac, name)
-        # cppk.AvtoTestMetro(number, mac, name)
-        # MCC.AvtoTestMetro(number, mac, name)
-        # aeroexpress.AvtoTestMetro(number, mac, name)
-        # enforta.AvtoTestMetro(number, mac, name)
-        # akado.AvtoTestMetro(number, mac, name)
-        # guest_wifi.AvtoTestMetro(number, mac, name)
-        # Sola.AvtoTestMetro(number, mac, name)
-        # nauka.AvtoTestMetro(number, mac, name)
-        # snb.AvtoTestMetro(number, mac, name)
-        # almatel.AvtoTestMetro(number, mac, name)
-        # beeline.AvtoTestMetro(number, mac, name)
-        SIMF_STEND.AvtoTestMetro(number, mac, name)
-        # mts_vdnh.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
+
 
     def startTestsSamsung (number, mac, name):
-        # metro_Home.AvtoTestMetro(number, mac, name)
-        # metro.AvtoTestMetro(number, mac, name)
-        # cppk.AvtoTestMetro(number, mac, name)
-        # MCC.AvtoTestMetro(number, mac, name)
-        # aeroexpress.AvtoTestMetro(number, mac, name)
-        # enforta.AvtoTestMetro(number, mac, name)
-        # akado.AvtoTestMetro(number, mac, name)
-        # guest_wifi.AvtoTestMetro(number, mac, name)
-        # Sola.AvtoTestMetro(number, mac, name)
-        # nauka.AvtoTestMetro(number, mac, name)
-        # snb.AvtoTestMetro(number, mac, name)
-        # almatel.AvtoTestMetro(number, mac, name)
-        # beeline.AvtoTestMetro(number, mac, name)
-        SIMF_STEND.AvtoTestMetro(number, mac, name)
-        # mts_vdnh.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
 
 
-
-
-
-    # d(text="Ошибка #900") - внедрить ( появилась после рекламы на мцк)
-    # startTestsSamsung(number3, MAC3, Name3)
     startTestsXiaomiRedmi(number2, MAC2, Name2)
-    # startTestsXiaomiMi(number1, MAC1, Name1)
-
-
-    # SendMessage(f"✅Автотесты завершены📴")  # Отправка сообщения в телеграмм канал
-    # Send_File("logs/buttonClick.txt")
-    # print(f"{NowDate()}  📣 :  Автотесты завершены📱")
-    # schedule.every(4).minutes.do(startTests, number=number2, mac=MAC2, name=Name2)
 
 
     while True:

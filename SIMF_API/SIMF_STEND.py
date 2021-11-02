@@ -1,4 +1,4 @@
-def AvtoTestMetro (ser, MAC, DevicesName):
+def AvtoTestMetro (ser, MAC, DevicesName, ssid):
     import uiautomator2 as u2
     from time import sleep
     import requests
@@ -12,11 +12,11 @@ def AvtoTestMetro (ser, MAC, DevicesName):
     with open("buttonClick.txt", 'a+', encoding='utf-8') as f:
 
         if DevicesName == "Samsung A32":
-            ssid = '_P_SIMF_STEND'
-            name_video = 'P_SIMF_STEND'
+            ssid = ssid
+            name_video = ssid[1::]
         else:
-            ssid = '_P_SIMF_STEND'
-            name_video = 'P_SIMF_STEND'
+            ssid = ssid
+            name_video = ssid[1::]
 
         d = u2.connect_usb(ser)
         flag = 7
@@ -27,8 +27,7 @@ def AvtoTestMetro (ser, MAC, DevicesName):
             print(f'Тест № {Schet.count}')
             print(f"{NowDate()}  {DevicesName}: 📣 {ssid}:  Автотест запущен📱")
             f.write(f"{NowDate()}  {DevicesName}: 📣 {ssid}:  Автотест запущен🚀\n")
-            # Functions.TelegramApi.SendMessage(
-            #     f"{DevicesName}: 📣 {ssid}:  Автотест запущен📱")  # Отправка сообщения в телеграмм канал
+
             if d.info.get('screenOn'):
                 d.shell('input keyevent 26')  # Проверка активности экрана. Если активен, то выключится перед началом теста
             Lock(d)  # Разблокировка экрана
@@ -45,23 +44,18 @@ def AvtoTestMetro (ser, MAC, DevicesName):
 
             # -- Подключение к SSID
             if DevicesName == "Samsung A32":
-                SsidName = d.xpath(f'//*[@text="{ssid}"]')
-                SsidName.click_exists(20)
-                sleep(7)
-                SsidName.click_exists(5)
-                print(f"{NowDate()}  SSID найден.Авторизация началась")
+                # SsidName = d.xpath(f'//*[@text="{ssid}"]')
+                SsidName = d(resourceId="com.android.settings:id/title", text=f"{ssid}")
+                # SsidName.click_exists(20)
+                SsidName.click_gone(5, 5)
+                # sleep(7)
+                # SsidName.click_exists(5)
                 sleep(6)
-                # else:
-                #     scroll(d, DevicesName)
-                #     SsidName.click_exists(20)
-                #     sleep(7)
-                #     SsidName.click_exists(5)
-                #     print(f"{NowDate()}  SSID найден.Авторизация началась")
-                #     sleep(6)
+
             else:
                 SsidName = d(text=f'{ssid}', className='android.widget.CheckedTextView')
-                SsidName.click_exists(20)
-                print(f"{NowDate()}  SSID найден.Авторизация началась")
+                # SsidName.click_exists(20)
+                SsidName.click_gone(5, 5)
                 sleep(7)
 
 
@@ -75,6 +69,11 @@ def AvtoTestMetro (ser, MAC, DevicesName):
             if Captive.exists:
                 print(f"{NowDate()}  Кептив открылся")
                 f.write(f"{NowDate()}  Кептив открылся\n")
+            elif not SsidName.exists:
+                print(f"{NowDate()}  SSID не найден.Тест завершен.")
+                f.write(f"{NowDate()}  SSID не найден.Тест завершен.\n")
+                SendMessage(f"{DevicesName}: ⛔ {ssid}: SSID не найден")
+                return
             else:
                 if Functions.CheckInternet.CheckInternet(d, DevicesName):
                     print(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.")
@@ -106,7 +105,7 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                     OpenSixtyMin.click_gone()
                     print(f"{NowDate()}  Нажата кнопка 'Войти в Интернет'")
                     f.write(f"{NowDate()}  Нажата кнопка 'Войти в Интернет'\n")
-                    sleep(6)
+                    sleep(7)
                     break
                 if flag == 1:
                     print(f"{NowDate()}  Кнопка 'Войти в Интернет' не найдена. Скрипт принудительно завершен ")
@@ -121,14 +120,12 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                 '//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View[1]')
             ButtonX2 = d.xpath(
                 '//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[1]')
-            ButtonX3 = d.xpath('// *[ @ resource - id = "app"] / android.view.View[1] / android.view.View[3]')
 
-            sleep(5)
+
+
             final_check2 = d(description="cabinet.wi-fi")
             final_check = d.xpath('//*[@text="cabinet.wi-fi"]')
             while not (final_check.exists or final_check2.exists):
-                # print(final_check.exists)
-                # print(final_check2.exists)
                 if ButtonX1.exists:
                     ButtonX1.click_exists(5)
                     print(f"{NowDate()}  Нажат крестик вид №1")
@@ -140,15 +137,13 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                         # d.click(954, 500)
                     if DevicesName == "XiaomiRedmiNote9":
                         d.click(980, 490)
-                    if DevicesName == "Samsung A32":
+                    if DevicesName == "Samsung A32" and err400:
+                        ButtonX2.click_exists(5)
+                    if DevicesName == "Samsung A32" and err400 == False:
                         d.click(962, 273)
                     print(f"{NowDate()}  Нажат крестик вид №2")
                     f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                     sleep(5)
-                # elif ButtonX3.exists:
-                #     ButtonX3.click_exists(5)
-                #     print(f"{NowDate()}  Нажат крестик №5 на портале")
-                #     f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")
@@ -195,9 +190,8 @@ def AvtoTestMetro (ser, MAC, DevicesName):
             SendMessage(f"{DevicesName}: 🔴 {ssid}: Автотест упал")
 
         finally:
-            sleep(2)
+            sleep(1)
             d.press("home")
-            sleep(2)
             d.shell('svc wifi disable')
             d.shell('input keyevent 26')
             requests.get(f"http://sae.msk.vmet.ro/v1/drop/mac/{MAC}")

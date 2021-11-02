@@ -45,38 +45,31 @@ def AvtoTest (ser, MAC, DevicesName, ssid):
 
             # kargs = {'fps': 3, 'quality': 10, 'macro_block_size': 16, 'ffmpeg_params': ['-s', '384x800']}
             d.screenrecord(f"screencasts/{DevicesName}_{name_video}.mp4",)   # Запуск записи экрана
-            sleep(5)
+            sleep(7)
 
             # -- Подключение к SSID
             if DevicesName == "Samsung A32":
-                SsidName = d.xpath(f'//*[@text="{ssid}"]')
+                SsidName = d(resourceId="com.android.settings:id/title", text=f"{ssid}")
                 if SsidName.exists:
-                    SsidName.click_exists(20)
-                    sleep(7)
-                    SsidName.click_exists(5)
-                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    SsidName.click_gone(5, 5)
                     sleep(6)
                 else:
                     scroll(d, DevicesName)
-                    SsidName.click_exists(20)
-                    sleep(7)
-                    SsidName.click_exists(5)
-                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    sleep(3)
+                    SsidName.click_gone(5, 5)
                     sleep(6)
             else:
                 SsidName = d(text=f'{ssid}', className='android.widget.CheckedTextView')
                 if SsidName.exists:
-                    SsidName.click_exists(20)
-                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    SsidName.click_gone(5, 5)
                     sleep(7)
                 else:
                     scroll(d, DevicesName)
                     sleep(3)
-                    SsidName.click_exists(20)
-                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    SsidName.click_gone(5, 5)
                     sleep(7)
 
-            # -- Проверка взлёта кептива
+                # -- Проверка взлёта кептива
             if DevicesName == "Samsung A32":
                 Captive = d.xpath('//*[@resource-id="android:id/action_bar"]/android.widget.LinearLayout[1]')
             else:
@@ -84,8 +77,15 @@ def AvtoTest (ser, MAC, DevicesName, ssid):
 
             Captive.wait(15)
             if Captive.exists:
+                print(f"{NowDate()}  SSID найден.Авторизация началась")
+                f.write(f"{NowDate()}  SSID найден.Авторизация началась\n")
                 print(f"{NowDate()}  Кептив открылся")
                 f.write(f"{NowDate()}  Кептив открылся\n")
+            elif not SsidName.exists:
+                print(f"{NowDate()}  SSID не найден.Тест завершен.")
+                f.write(f"{NowDate()}  SSID не найден.Тест завершен.\n")
+                SendMessage(f"{DevicesName}: ⛔ {ssid}: SSID не найден")
+                return
             else:
                 if Functions.CheckInternet.CheckInternet(d, DevicesName):
                     print(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.")
@@ -96,6 +96,17 @@ def AvtoTest (ser, MAC, DevicesName, ssid):
                     f.write(f"{NowDate()}  Кептив не отработал.Тест завершен.\n")
                     SendMessage(f"{DevicesName}: 🔥 {ssid}: Автотест упал")
                 return
+
+            # -- Чекер ошибки 400
+            if d(text="Error 400: Bad Request").exists:
+                # -- Подключение к ssid
+                d.shell("am start -a android.intent.action.VIEW  http://gowifi.ru")
+                print(f"{NowDate()}  Error 400: Bad Request")
+                f.write(f"{NowDate()}  Error 400: Bad Request\n")
+                print(f"{NowDate()}  Авторизация через браузер")
+                f.write(f"{NowDate()}  Авторизация через браузер\n")
+                err400 = True
+                sleep(5)
 
             flagBrowser = 2
             # -- Нажатие на "Войти в интернет"
@@ -122,14 +133,14 @@ def AvtoTest (ser, MAC, DevicesName, ssid):
                 '//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View[1]')
             ButtonX2 = d.xpath(
                 '//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[1]')
-            ButtonX3 = d.xpath('//*[@text="Wi-Fi.ru"]/android.view.View[3]/android.view.View[1]')
 
 
-            final_check = d.xpath('//*[@content-desc="www.mos"]')
+            if ssid == '_P_ttk_hospitals':
+                final_check = d(text="mos.ru – Официальный сайт Мэра Москвы")
+            else:
+                final_check = d.xpath('//*[@content-desc="www.mos"]')
+
             while not (final_check.exists or SsidName.exists):
-                # print(final_check.exists)
-                # print(final_check2.exists)
-                # print(SsidName.exists)
                 if ButtonX1.exists:
                     ButtonX1.click_exists(5)
                     print(f"{NowDate()}  Нажат крестик вид №1")
@@ -146,11 +157,6 @@ def AvtoTest (ser, MAC, DevicesName, ssid):
                     print(f"{NowDate()}  Нажат крестик вид №2")
                     f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                     sleep(5)
-                # elif ButtonX3.exists:
-                #     ButtonX3.click_exists(5)
-                #     print(f"{NowDate()}  Нажат крестик №5 на портале")
-                #     f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
-                #     sleep(8)
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")

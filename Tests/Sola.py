@@ -49,45 +49,43 @@ def AvtoTest(ser, MAC, DevicesName):
 
             # -- Подключение к SSID
             if DevicesName == "Samsung A32":
-                SsidName = d.xpath(f'//*[@text="{ssid}"]')
+                SsidName = d(resourceId="com.android.settings:id/title", text=f"{ssid}")
                 if SsidName.exists:
-                    SsidName.click_exists(20)
-                    sleep(7)
-                    SsidName.click_exists(5)
-                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    SsidName.click_gone(5, 5)
                     sleep(6)
                 else:
                     scroll(d, DevicesName)
-                    SsidName.click_exists(20)
-                    sleep(7)
-                    SsidName.click_exists(5)
-                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    sleep(3)
+                    SsidName.click_gone(5, 5)
                     sleep(6)
             else:
                 SsidName = d(text=f'{ssid}', className='android.widget.CheckedTextView')
                 if SsidName.exists:
-                    SsidName.click_exists(20)
-                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    SsidName.click_gone(5, 5)
                     sleep(7)
                 else:
                     scroll(d, DevicesName)
                     sleep(3)
-                    SsidName.click_exists(20)
-                    print(f"{NowDate()}  SSID найден.Авторизация началась")
+                    SsidName.click_gone(5, 5)
                     sleep(7)
 
-            # -- Проверка взлёта кептива
+                # -- Проверка взлёта кептива
             if DevicesName == "Samsung A32":
                 Captive = d.xpath('//*[@resource-id="android:id/action_bar"]/android.widget.LinearLayout[1]')
-                Captive.wait(10)
             else:
                 Captive = d(text="Подключаться автоматически")
-                Captive.wait(10)
 
             Captive.wait(15)
             if Captive.exists:
+                print(f"{NowDate()}  SSID найден.Авторизация началась")
+                f.write(f"{NowDate()}  SSID найден.Авторизация началась\n")
                 print(f"{NowDate()}  Кептив открылся")
                 f.write(f"{NowDate()}  Кептив открылся\n")
+            elif not SsidName.exists:
+                print(f"{NowDate()}  SSID не найден.Тест завершен.")
+                f.write(f"{NowDate()}  SSID не найден.Тест завершен.\n")
+                SendMessage(f"{DevicesName}: ⛔ {ssid}: SSID не найден")
+                return
             else:
                 if Functions.CheckInternet.CheckInternet(d, DevicesName):
                     print(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.")
@@ -98,6 +96,17 @@ def AvtoTest(ser, MAC, DevicesName):
                     f.write(f"{NowDate()}  Кептив не отработал.Тест завершен.\n")
                     SendMessage(f"{DevicesName}: 🔥 {ssid}: Автотест упал")
                 return
+
+            # -- Чекер ошибки 400
+            if d(text="Error 400: Bad Request").exists:
+                # -- Подключение к ssid
+                d.shell("am start -a android.intent.action.VIEW  http://gowifi.ru")
+                print(f"{NowDate()}  Error 400: Bad Request")
+                f.write(f"{NowDate()}  Error 400: Bad Request\n")
+                print(f"{NowDate()}  Авторизация через браузер")
+                f.write(f"{NowDate()}  Авторизация через браузер\n")
+                err400 = True
+                sleep(5)
 
             flagBrowser = 2
             # -- Нажатие на "Войти в интернет"

@@ -32,16 +32,16 @@ if __name__ == "__main__":
 
 
     def startTestsXiaomiRedmi (number, mac, name):
-        SIMF_STEND.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
 
 
     @repeat(every(30).seconds, number1, MAC1, Name1)
     def startTestsXiaomiMi (number, mac, name):
-        SIMF_STEND.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
 
 
     def startTestsSamsung (number, mac, name):
-        SIMF_STEND.AvtoTestMetro(number, mac, name)
+        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
 
 
     startTestsXiaomiMi(number1, MAC1, Name1)
