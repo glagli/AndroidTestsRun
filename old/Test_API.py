@@ -2,15 +2,12 @@ from Functions.TelegramApi import Send_File
 from Functions.TelegramApi import SendMessage
 from Functions.DataName import NowDate
 
-from Tests import EOS
-from Tests import Sbornay
-from Tests import Sola
-from Tests import metro
+from old import Sola, Sbornay, EOS
 
 if __name__ == "__main__":
     print(f"{NowDate()}  📣 :  Автотесты запущены📱")
     print(f"_____________________________________________________________")
-    with open("logs/buttonClick.txt", 'w', encoding='utf-8') as f:
+    with open("../logs/buttonClick.txt", 'w', encoding='utf-8') as f:
         f.write(f"{NowDate()}  📣 :  Автотесты запущены🚀\n")
         f.write(f"_____________________________________________________________\n")
 
@@ -80,7 +77,7 @@ if __name__ == "__main__":
 
     def startTestsSamsung (number, mac, name):
         # metro_Home.AvtoTest(number, mac, name)
-        metro.AvtoTest(number, mac, name)
+        # metro.AvtoTest(number, mac, name)
         # Sbornay.AvtoTest(number, mac, name, '_P_MCC_incarnet')
         # Sbornay.AvtoTest(number, mac, name, '_P_aeroexpress')
         # Sbornay.AvtoTest(number, mac, name, '_P_cppk')
@@ -100,7 +97,7 @@ if __name__ == "__main__":
 
     # d(text="Ошибка #900") - внедрить ( появилась после рекламы на мцк)
 
-    startTestsSamsung(number3, MAC3, Name3)
+    # startTestsSamsung(number3, MAC3, Name3)
     startTestsXiaomiRedmi(number2, MAC2, Name2)
     # startTestsXiaomiMi(number1, MAC1, Name1)
 

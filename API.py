@@ -1,6 +1,3 @@
-from Tests import metro
-from time import sleep
-from Functions.TelegramApi import Send_File
 import uiautomator2 as u2
 
 XiaomiMi9 = "be11611b"
