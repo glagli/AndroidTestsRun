@@ -28,6 +28,7 @@ def AutoTest(ser, mac, devices_name, ssid):
         try:
             print(f"{NowDate()}  {devices_name}: 📣 {ssid}:  Автотест запущен📱")
             f.write(f"{NowDate()}  {devices_name}: 📣 {ssid}:  Автотест запущен🚀\n")
+
             if d.info.get('screenOn'):
                 d.shell('input keyevent 26')  # Проверка активности экрана. Если вкл, то выкл перед началом теста
             Lock(d)  # Разблокировка экрана
@@ -39,6 +40,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                 wifi = d(text='Wi-Fi', className='android.widget.TextView')
                 wifi.click_exists(3)
 
+
             d.shell('svc wifi enable')  # Включение Wi-Fi
             d.screenrecord(f"screencasts/{devices_name}_{name_video}.mp4")  # Запуск записи экрана
             sleep(5)
@@ -46,6 +48,7 @@ def AutoTest(ser, mac, devices_name, ssid):
             # -- Подключение к SSID
             if devices_name == "Samsung A32":
                 ssid_name = d(resourceId="com.android.settings:id/title", text=f"{ssid}")
+                ssid_name.wait(True, 20)
                 if ssid_name.exists:
                     ssid_name.click_gone(8, 5)
                     sleep(6)
@@ -136,12 +139,12 @@ def AutoTest(ser, mac, devices_name, ssid):
             # -- Прохождение рекламы
             button_x1 = d.xpath('//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[3]/android.view.View[1]')
             button_x2 = d.xpath('//*[@text="Авторизация Wi-Fi"]/android.view.View[1]/android.view.View[2]/android.view.View[1]/android.view.View[1]')
+            err900 = d(text="Ошибка #900")
 
             # До кнопки Продолжить/Далее (Только для метро)
             if ssid == '_P_metro' or ssid == 'MT_FREE':
                 button_continue = d(text="Продолжить", className='android.widget.Button')
                 button_further = d(text="Далее", className='android.widget.Button')
-                err900 = d(text="Ошибка #900")
 
                 for i in range(20):
                     if button_continue.exists or button_further.exists:
