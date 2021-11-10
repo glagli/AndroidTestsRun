@@ -2,8 +2,8 @@ import requests
 from time import sleep
 
 chatId = '-1001609151514'
-TOKEN = '2072244468:AAEBstS6Ct2i0k4TOIP_AFCbhKwJ7xNdYck'
-TOKEN2 = '2066274978:AAGZuRG2RMvyUPtOpArDN6AxhrdpXFY4NYk'
+TOKEN2 = '2072244468:AAEBstS6Ct2i0k4TOIP_AFCbhKwJ7xNdYck'
+TOKEN = '2066274978:AAGZuRG2RMvyUPtOpArDN6AxhrdpXFY4NYk'
 
 
 def SendMessage (text):
