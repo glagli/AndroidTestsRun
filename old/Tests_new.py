@@ -11,7 +11,7 @@ def AutoTest(ser, mac, devices_name, ssid):
     from Functions.LockDisplay import Lock
     from Functions.Sumsung import Connect_WiFi
     from Functions.FindSsid import scroll
-    # from Functions.pgconnect import addResult
+
 
     time_start = time()
     if devices_name == "Samsung A32" and ssid == 'MT_FREE':
@@ -154,6 +154,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                     f.write(f"{NowDate()}  Кнопка 'Войти в Интернет' не найдена. Скрипт принудительно завершен \n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Кнопка 'Войти в Интернет' не найдена. Скрипт завершен")
                     check_err = True
+
                     return
                 else:
                     flag -= 1

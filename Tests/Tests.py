@@ -2,7 +2,10 @@ def AutoTest(ser, mac, devices_name, ssid):
     import uiautomator2 as u2
     from time import sleep
     from time import time
+    from datetime import datetime
     import requests
+    from Functions.Yandex import sendYandexScreencast
+    from Functions.Yandex import getHref
     import Functions.CheckInternet
     from Functions.ClearCookie import XiaomiCl
     from Functions.DataName import NowDate
@@ -11,11 +14,13 @@ def AutoTest(ser, mac, devices_name, ssid):
     from Functions.LockDisplay import Lock
     from Functions.Sumsung import Connect_WiFi
     from Functions.FindSsid import scroll
+    from Functions.pgconnect import addResult
+    from Functions.pgconnect import updateResult
 
     time_start = time()
     if devices_name == "Samsung A32" and ssid == 'MT_FREE':
         ssid = ssid
-        name_video = ssid
+        name_video = "mt_free"
     else:
         ssid = ssid
         name_video = ssid[1::]
@@ -25,7 +30,6 @@ def AutoTest(ser, mac, devices_name, ssid):
     flag2 = 12
     err400 = False
     check_err = False
-
 
     with open("logs/buttonClick.txt", 'a', encoding='utf-8') as f:
         try:
@@ -60,6 +64,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                     ssid_name.click_gone(5, 5)
                     sleep(6)
             else:
+                if d(resourceId="miui:id/buttonPanel").exists:
+                    d(resourceId="miui:id/buttonPanel").click_gone()
                 ssid_name = d(text=f'{ssid}', className='android.widget.CheckedTextView')
                 ssid_name.wait(True, 60)
                 if ssid_name.exists:
@@ -77,6 +83,9 @@ def AutoTest(ser, mac, devices_name, ssid):
                 print(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.")
                 f.write(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.\n")
                 SendMessage(f"{devices_name}: ⛔ {ssid}: Сессия не убита")
+                # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                # err 0 - не баг \ 900 - ошибка 900 \ 100 - ошибка 100\
+                addResult(ssid, devices_name, 2, "Active session", "")
                 return
 
             # -- Проверка взлёта кептива
@@ -95,6 +104,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                 print(f"{NowDate()}  SSID не найден.Тест завершен.")
                 f.write(f"{NowDate()}  SSID не найден.Тест завершен.\n")
                 SendMessage(f"{devices_name}: ⛔ {ssid}: SSID не найден")
+                # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                addResult(ssid, devices_name, 3, "SSID not found", "")
                 return
             else:
                 # -- Проверка не убитой сессии 2
@@ -102,11 +113,15 @@ def AutoTest(ser, mac, devices_name, ssid):
                     print(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.")
                     f.write(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.\n")
                     SendMessage(f"{devices_name}: ⛔ {ssid}: Сессия не убита")
+                    # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                    addResult(ssid, devices_name, 2, "Active session", "")
                 else:
                     print(f"{NowDate()}  Кептив не отработал.Тест завершен.")
                     f.write(f"{NowDate()}  Кептив не отработал.Тест завершен.\n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
                     check_err = True
+                    # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                    addResult(ssid, devices_name, 1, "Captive not found", "")
                 return
 
             # -- Чекер ошибки 400
@@ -120,6 +135,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                 # f.write(f"{NowDate()}  Авторизация через браузер\n")
                 err400 = True
                 check_err = True
+                # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                addResult(ssid, devices_name, 1, "err400", "")
                 return
 
             # -- Чекер заглушки
@@ -129,6 +146,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                 f.write(f"{NowDate()}  Найдена заглушка для рандомного мас\n")
                 SendMessage(f"{devices_name}: 🔥 {ssid}: Найдена заглушка для рандомного мас")
                 check_err = True
+                # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                addResult(ssid, devices_name, 1, "random mac", "")
                 return
 
             # -- Нажатие на "Войти в интернет"
@@ -146,13 +165,14 @@ def AutoTest(ser, mac, devices_name, ssid):
                     f.write(f"{NowDate()}  Нажата кнопка 'Войти в Интернет'\n")
                     time_start_avtoriz = time()
                     flag -= 1
-                    sleep(6)
                     break
                 if flag == 1:
                     print(f"{NowDate()}  Кнопка 'Войти в Интернет' не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Кнопка 'Войти в Интернет' не найдена. Скрипт принудительно завершен \n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Кнопка 'Войти в Интернет' не найдена. Скрипт завершен")
                     check_err = True
+                    # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                    addResult(ssid, devices_name, 1, "button Connect not found", "")
                     return
                 else:
                     flag -= 1
@@ -184,7 +204,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                         flag2 -= 1
                         sleep(6)
                     elif button_x2.exists:
-                        button_x2.click_exists(5)
+                        d.click(0.940, 0.220)
+                        # button_x2.click_exists(5)
                         print(f"{NowDate()}  Нажат крестик вид №2")
                         f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                         flag2 -= 1
@@ -194,18 +215,24 @@ def AutoTest(ser, mac, devices_name, ssid):
                         f.write(f"{NowDate()} Кнопка 'Далее или Продолжить' не найдена.Скрипт принудительно завершен\n")
                         SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
                         check_err = True
+                        # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                        addResult(ssid, devices_name, 1, "button Next not found", "")
                         return
                     elif err900.exists:
                         print(f"{NowDate()} Ошибка 900.Скрипт завершен")
                         f.write(f"{NowDate()} Ошибка 900.Скрипт завершен\n")
                         SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 900")
                         check_err = True
+                        # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                        addResult(ssid, devices_name, 1, "Error900", "")
                         return
                     elif err100.exists:
                         print(f"{NowDate()} Ошибка 100.Скрипт завершен")
                         f.write(f"{NowDate()} Ошибка 100.Скрипт завершен\n")
                         SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 100")
                         check_err = True
+                        # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                        addResult(ssid, devices_name, 1, "Error100", "")
                         return
                     else:
                         flag2 -= 1
@@ -236,7 +263,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                 final_check = d.xpath('//*[@content-desc="Logo"]')
                 final_check2 = d.xpath('//*[@content-desc="Logo"]')
             else:
-                final_check2 = d(description="cabinet.wi-fi")
+                final_check2 = d.xpath('//*[@text=""]')
                 final_check = d.xpath('//*[@text="cabinet.wi-fi"]')
 
             # Авторизация до новостного портала
@@ -253,8 +280,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                         button_x2.click_exists(5)
                         flag2 -= 1
                     if devices_name == "XiaomiRedmiNote9":
-                        # d.click(980, 490)
-                        button_x2.click_exists(5)
+                        d.click(0.940, 0.220)
+                        # button_x2.click_exists(5)
                         flag2 -= 1
                     if devices_name == "Samsung A32":
                         # d.click(962, 273)
@@ -284,18 +311,24 @@ def AutoTest(ser, mac, devices_name, ssid):
                     f.write(f"{NowDate()} Ошибка 900.Скрипт завершен\n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 900")
                     check_err = True
+                    # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                    addResult(ssid, devices_name, 1, "Error900", "")
                     return
                 elif err100.exists:
                     print(f"{NowDate()} Ошибка 100.Скрипт завершен")
                     f.write(f"{NowDate()} Ошибка 100.Скрипт завершен\n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 100")
                     check_err = True
+                    # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                    addResult(ssid, devices_name, 1, "Error100", "")
                     return
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Неизвестная ошибка")
                     check_err = True
+                    # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                    addResult(ssid, devices_name, 3, "Portal not found", "")
                     return
                 else:
                     flag2 -= 1
@@ -329,13 +362,13 @@ def AutoTest(ser, mac, devices_name, ssid):
                 tick.click_exists(10)
                 print(f"{NowDate()}  Нажата галочка")
                 time_end_avtoriz = time() - time_start_avtoriz
-                print(f"Время затраченное на авторизацию: {round(time_end_avtoriz,2)} сек")
+                print(f"Время затраченное на авторизацию: {round(time_end_avtoriz, 2)} сек")
                 f.write(f"{NowDate()}  Нажата галочка\n")
             else:
                 print(f"{NowDate()}  Кептив закрылся")
                 f.write(f"{NowDate()}  Кептив закрылся\n")
                 time_end_avtoriz = time() - time_start_avtoriz
-                print(f"Время затраченное на авторизацию: {round(time_end_avtoriz,2)} сек")
+                print(f"Время затраченное на авторизацию: {round(time_end_avtoriz, 2)} сек")
 
             # -- Проверка доступа в интернет
             if Functions.CheckInternet.CheckInternet(d, devices_name):
@@ -346,32 +379,43 @@ def AutoTest(ser, mac, devices_name, ssid):
                 f.write(f"{NowDate()} Доступа в интернет нет! Скрипт принудительно завершен \n")
                 SendMessage(f"{devices_name}: 🔥 {ssid}: Доступа в интернет нет!")
                 check_err = True
+                # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                addResult(ssid, devices_name, 1, "Internet offline", "")
                 return
 
             # -- Финиш
             SendMessage(f"{devices_name}: 📣 {ssid}: Автотест успешно пройден ✅ ")
             print(f"{NowDate()}  Автотест пройден ✅")
             f.write(f"{NowDate()}  Автотест пройден ✅ \n")
+            # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+            addResult(ssid, devices_name, 0, "PASS", "")
 
         except AssertionError:
             check_err = True
             print(f"{NowDate()}  🔴 Автотест упал. Не найдена кнопка на новостном портале")
             f.write(f"{NowDate()}  🔴 Автотест упал. Не найдена кнопка на новостном портале\n")
             SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
+            # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+            addResult(ssid, devices_name, 3, "AssertionError", "")
+
 
         finally:
             sleep(2)
             d.screenrecord.stop()
+            sendYandexScreencast(f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4", f"{devices_name}_{name_video}.mp4")
+            updateResult(getHref(f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4"))
             if err400 and 'Xiaomi' in devices_name:
                 XiaomiCl(d, devices_name)
             d.press("home")
             sleep(2)
             d.shell('svc wifi disable')
             d.shell('input keyevent 26')
-            requests.get(f"http://sae.msk.vmet.ro/v1/drop/mac/{mac}")
+            requests.get(
+                f"http://10.1.11.2/auth/deauthorize/{mac}") if ssid == '_P_dit_enforta_street' else requests.get(
+                f"http://sae.msk.vmet.ro/v1/drop/mac/{mac}")
             print(f"{NowDate()}  Сессия убита ✅")
             time_finish = time() - time_start
-            print(f"Время работы скрипта: {round(time_finish,2)} сек")
+            print(f"Время работы скрипта: {round(time_finish, 2)} сек")
             print(f"_____________________________________________________________")
             f.write(f"{NowDate()}  Сессия убита ✅\n")
             f.write(f"_____________________________________________________________\n")

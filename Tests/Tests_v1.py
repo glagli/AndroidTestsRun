@@ -11,7 +11,6 @@ def AutoTest(ser, mac, devices_name, ssid):
     from Functions.LockDisplay import Lock
     from Functions.Sumsung import Connect_WiFi
     from Functions.FindSsid import scroll
-    # from Functions.pgconnect import addResult
 
     time_start = time()
     if devices_name == "Samsung A32" and ssid == 'MT_FREE':
@@ -26,7 +25,6 @@ def AutoTest(ser, mac, devices_name, ssid):
     flag2 = 12
     err400 = False
     check_err = False
-
 
     with open("logs/buttonClick.txt", 'a', encoding='utf-8') as f:
         try:
@@ -61,6 +59,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                     ssid_name.click_gone(5, 5)
                     sleep(6)
             else:
+                if d(resourceId="miui:id/buttonPanel").exists:
+                    d(resourceId="miui:id/buttonPanel").click_gone()
                 ssid_name = d(text=f'{ssid}', className='android.widget.CheckedTextView')
                 ssid_name.wait(True, 60)
                 if ssid_name.exists:
@@ -147,7 +147,6 @@ def AutoTest(ser, mac, devices_name, ssid):
                     f.write(f"{NowDate()}  Нажата кнопка 'Войти в Интернет'\n")
                     time_start_avtoriz = time()
                     flag -= 1
-                    sleep(6)
                     break
                 if flag == 1:
                     print(f"{NowDate()}  Кнопка 'Войти в Интернет' не найдена. Скрипт принудительно завершен ")
@@ -185,7 +184,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                         flag2 -= 1
                         sleep(6)
                     elif button_x2.exists:
-                        button_x2.click_exists(5)
+                        d.click(0.940, 0.220)
+                        # button_x2.click_exists(5)
                         print(f"{NowDate()}  Нажат крестик вид №2")
                         f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                         flag2 -= 1
@@ -237,7 +237,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                 final_check = d.xpath('//*[@content-desc="Logo"]')
                 final_check2 = d.xpath('//*[@content-desc="Logo"]')
             else:
-                final_check2 = d(description="cabinet.wi-fi")
+                final_check2 = d.xpath('//*[@text=""]')
                 final_check = d.xpath('//*[@text="cabinet.wi-fi"]')
 
             # Авторизация до новостного портала
@@ -254,8 +254,8 @@ def AutoTest(ser, mac, devices_name, ssid):
                         button_x2.click_exists(5)
                         flag2 -= 1
                     if devices_name == "XiaomiRedmiNote9":
-                        # d.click(980, 490)
-                        button_x2.click_exists(5)
+                        d.click(0.940, 0.220)
+                        # button_x2.click_exists(5)
                         flag2 -= 1
                     if devices_name == "Samsung A32":
                         # d.click(962, 273)
@@ -330,13 +330,13 @@ def AutoTest(ser, mac, devices_name, ssid):
                 tick.click_exists(10)
                 print(f"{NowDate()}  Нажата галочка")
                 time_end_avtoriz = time() - time_start_avtoriz
-                print(f"Время затраченное на авторизацию: {round(time_end_avtoriz,2)} сек")
+                print(f"Время затраченное на авторизацию: {round(time_end_avtoriz, 2)} сек")
                 f.write(f"{NowDate()}  Нажата галочка\n")
             else:
                 print(f"{NowDate()}  Кептив закрылся")
                 f.write(f"{NowDate()}  Кептив закрылся\n")
                 time_end_avtoriz = time() - time_start_avtoriz
-                print(f"Время затраченное на авторизацию: {round(time_end_avtoriz,2)} сек")
+                print(f"Время затраченное на авторизацию: {round(time_end_avtoriz, 2)} сек")
 
             # -- Проверка доступа в интернет
             if Functions.CheckInternet.CheckInternet(d, devices_name):
@@ -371,10 +371,12 @@ def AutoTest(ser, mac, devices_name, ssid):
             sleep(2)
             d.shell('svc wifi disable')
             d.shell('input keyevent 26')
-            requests.get(f"http://sae.msk.vmet.ro/v1/drop/mac/{mac}")
+            requests.get(
+                f"http://10.1.11.2/auth/deauthorize/{mac}") if ssid == '_P_dit_enforta_street' else requests.get(
+                f"http://sae.msk.vmet.ro/v1/drop/mac/{mac}")
             print(f"{NowDate()}  Сессия убита ✅")
             time_finish = time() - time_start
-            print(f"Время работы скрипта: {round(time_finish,2)} сек")
+            print(f"Время работы скрипта: {round(time_finish, 2)} сек")
             print(f"_____________________________________________________________")
             f.write(f"{NowDate()}  Сессия убита ✅\n")
             f.write(f"_____________________________________________________________\n")
