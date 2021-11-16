@@ -5,7 +5,6 @@ def AutoTest(ser, mac, devices_name, ssid):
     from datetime import datetime
     import requests
     from Functions.Yandex import sendYandexScreencast
-    from Functions.Yandex import getHref
     import Functions.CheckInternet
     from Functions.ClearCookie import XiaomiCl
     from Functions.DataName import NowDate
@@ -15,15 +14,44 @@ def AutoTest(ser, mac, devices_name, ssid):
     from Functions.Sumsung import Connect_WiFi
     from Functions.FindSsid import scroll
     from Functions.pgconnect import addResult
-    from Functions.pgconnect import updateResult
+
 
     time_start = time()
     if devices_name == "Samsung A32" and ssid == 'MT_FREE':
         ssid = ssid
         name_video = "mt_free"
-    else:
-        ssid = ssid
-        name_video = ssid[1::]
+    if ssid == '_P_metro':
+        name_video = 'metro'
+    if ssid == '_P_Sola_Metrotelecom Free':
+        name_video = 'sola'
+    if ssid == '_P_cppk':
+        name_video = 'cppk'
+    if ssid == '_P_MCC_incarnet':
+        name_video = 'mcc'
+    if ssid == '_p_mvf_bus':
+        name_video = 'bus'
+    if ssid == '_P_aeroexpress':
+        name_video = 'aeroexpress'
+    if ssid == '_P_dit_enforta_street':
+        name_video = 'enforta'
+    if ssid == '_P_dit_akado':
+        name_video = 'akado'
+    if ssid == '_P_dit_guest_wifi':
+        name_video = 'guest'
+    if ssid == '_P_dit_guest_wifi':
+        name_video = 'guest'
+    if ssid == '_P_dit_Nauka 3':
+        name_video = 'nauka'
+    if ssid == '_P_dit_snb':
+        name_video = 'snb'
+    if ssid == '_P_dit_almatel':
+        name_video = 'almatel'
+    if ssid == '_P_dit_beeline':
+        name_video = 'beeline'
+    if ssid == '_P_ttk_hospitals':
+        name_video = 'hospitals'
+    if ssid == '_P_dit_mts_vdnh':
+        name_video = 'mts_vdnh'
 
     d = u2.connect_usb(ser)
     flag = 6
@@ -39,6 +67,10 @@ def AutoTest(ser, mac, devices_name, ssid):
             if d.info.get('screenOn'):
                 d.shell('input keyevent 26')  # Проверка активности экрана. Если вкл, то выкл перед началом теста
             Lock(d)  # Разблокировка экрана
+
+            # Уберет всплывашку от USB подключения
+            if d(resourceId="miui:id/alertTitle").exists:
+                d.click(0.488, 0.902)
 
             if devices_name == "Samsung A32":
                 Connect_WiFi(d)
@@ -70,12 +102,12 @@ def AutoTest(ser, mac, devices_name, ssid):
                 ssid_name.wait(True, 60)
                 if ssid_name.exists:
                     ssid_name.click_gone(5, 5)
-                    sleep(7)
+                    sleep(8)
                 else:
                     scroll(d, devices_name)
                     sleep(3)
                     ssid_name.click_gone(5, 5)
-                    sleep(7)
+                    sleep(8)
 
             # -- Проверка не убитой сессии
             check_connect = d.xpath('//*[@text="Подключено"]')
@@ -85,7 +117,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                 SendMessage(f"{devices_name}: ⛔ {ssid}: Сессия не убита")
                 # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
                 # err 0 - не баг \ 900 - ошибка 900 \ 100 - ошибка 100\
-                addResult(ssid, devices_name, 2, "Active session", "")
+                addResult(ssid, devices_name, 2, "Active session", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                 return
 
             # -- Проверка взлёта кептива
@@ -105,7 +137,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                 f.write(f"{NowDate()}  SSID не найден.Тест завершен.\n")
                 SendMessage(f"{devices_name}: ⛔ {ssid}: SSID не найден")
                 # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                addResult(ssid, devices_name, 3, "SSID not found", "")
+                addResult(ssid, devices_name, 3, "SSID not found", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                 return
             else:
                 # -- Проверка не убитой сессии 2
@@ -114,14 +146,14 @@ def AutoTest(ser, mac, devices_name, ssid):
                     f.write(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.\n")
                     SendMessage(f"{devices_name}: ⛔ {ssid}: Сессия не убита")
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                    addResult(ssid, devices_name, 2, "Active session", "")
+                    addResult(ssid, devices_name, 2, "Active session", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                 else:
                     print(f"{NowDate()}  Кептив не отработал.Тест завершен.")
                     f.write(f"{NowDate()}  Кептив не отработал.Тест завершен.\n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
                     check_err = True
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                    addResult(ssid, devices_name, 1, "Captive not found", "")
+                    addResult(ssid, devices_name, 1, "Captive not found", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                 return
 
             # -- Чекер ошибки 400
@@ -136,7 +168,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                 err400 = True
                 check_err = True
                 # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                addResult(ssid, devices_name, 1, "err400", "")
+                addResult(ssid, devices_name, 1, "err400", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                 return
 
             # -- Чекер заглушки
@@ -147,7 +179,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                 SendMessage(f"{devices_name}: 🔥 {ssid}: Найдена заглушка для рандомного мас")
                 check_err = True
                 # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                addResult(ssid, devices_name, 1, "random mac", "")
+                addResult(ssid, devices_name, 1, "random mac", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                 return
 
             # -- Нажатие на "Войти в интернет"
@@ -172,7 +204,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Кнопка 'Войти в Интернет' не найдена. Скрипт завершен")
                     check_err = True
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                    addResult(ssid, devices_name, 1, "button Connect not found", "")
+                    addResult(ssid, devices_name, 1, "button Connect not found", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                     return
                 else:
                     flag -= 1
@@ -216,7 +248,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                         SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
                         check_err = True
                         # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                        addResult(ssid, devices_name, 1, "button Next not found", "")
+                        addResult(ssid, devices_name, 1, "button Next not found", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                         return
                     elif err900.exists:
                         print(f"{NowDate()} Ошибка 900.Скрипт завершен")
@@ -224,7 +256,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                         SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 900")
                         check_err = True
                         # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                        addResult(ssid, devices_name, 1, "Error900", "")
+                        addResult(ssid, devices_name, 1, "Error900", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                         return
                     elif err100.exists:
                         print(f"{NowDate()} Ошибка 100.Скрипт завершен")
@@ -232,7 +264,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                         SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 100")
                         check_err = True
                         # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                        addResult(ssid, devices_name, 1, "Error100", "")
+                        addResult(ssid, devices_name, 1, "Error100", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                         return
                     else:
                         flag2 -= 1
@@ -312,7 +344,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 900")
                     check_err = True
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                    addResult(ssid, devices_name, 1, "Error900", "")
+                    addResult(ssid, devices_name, 1, "Error900", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                     return
                 elif err100.exists:
                     print(f"{NowDate()} Ошибка 100.Скрипт завершен")
@@ -320,7 +352,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 100")
                     check_err = True
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                    addResult(ssid, devices_name, 1, "Error100", "")
+                    addResult(ssid, devices_name, 1, "Error100", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                     return
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
@@ -328,7 +360,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Неизвестная ошибка")
                     check_err = True
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                    addResult(ssid, devices_name, 3, "Portal not found", "")
+                    addResult(ssid, devices_name, 3, "Portal not found", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                     return
                 else:
                     flag2 -= 1
@@ -380,7 +412,7 @@ def AutoTest(ser, mac, devices_name, ssid):
                 SendMessage(f"{devices_name}: 🔥 {ssid}: Доступа в интернет нет!")
                 check_err = True
                 # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-                addResult(ssid, devices_name, 1, "Internet offline", "")
+                addResult(ssid, devices_name, 1, "Internet offline", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                 return
 
             # -- Финиш
@@ -388,7 +420,7 @@ def AutoTest(ser, mac, devices_name, ssid):
             print(f"{NowDate()}  Автотест пройден ✅")
             f.write(f"{NowDate()}  Автотест пройден ✅ \n")
             # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-            addResult(ssid, devices_name, 0, "PASS", "")
+            addResult(ssid, devices_name, 0, "PASS", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
 
         except AssertionError:
             check_err = True
@@ -396,14 +428,12 @@ def AutoTest(ser, mac, devices_name, ssid):
             f.write(f"{NowDate()}  🔴 Автотест упал. Не найдена кнопка на новостном портале\n")
             SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
             # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-            addResult(ssid, devices_name, 3, "AssertionError", "")
+            addResult(ssid, devices_name, 3, "AssertionError", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
 
 
         finally:
             sleep(2)
             d.screenrecord.stop()
-            sendYandexScreencast(f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4", f"{devices_name}_{name_video}.mp4")
-            updateResult(getHref(f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4"))
             if err400 and 'Xiaomi' in devices_name:
                 XiaomiCl(d, devices_name)
             d.press("home")
@@ -421,5 +451,7 @@ def AutoTest(ser, mac, devices_name, ssid):
             f.write(f"_____________________________________________________________\n")
             sleep(2)
             if check_err:
+                sendYandexScreencast(f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4",
+                                     f"{devices_name}_{name_video}.mp4")
                 Send_screencast(f"screencasts/{devices_name}_{name_video}.mp4", f'Авторизация {devices_name}\n{ssid}')
             sleep(10)

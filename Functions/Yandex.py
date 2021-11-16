@@ -1,9 +1,12 @@
 import requests
 import json
+import yadisk
 
-
+# y = yadisk.YaDisk(token="AQAAAABaRy6FAAd_m-5FbN1cO0tlm6zg6uICmd8")
+#
+# print(y.check_token()) # Проверим токен
 def sendYandexScreencast(name_video,video):
-    token = "AQAAAABaRy6FAAd_myPkcoZjokY-qnF_anGZKxs"
+    token = "AQAAAABaRy6FAAd_m-5FbN1cO0tlm6zg6uICmd8"
     headers = {
         "Accept": "application/json",
         "Authorization": "OAuth " + token
@@ -24,7 +27,7 @@ def sendYandexScreencast(name_video,video):
 
 
 def getHref(video):
-    token = "AQAAAABaRy6FAAd_myPkcoZjokY-qnF_anGZKxs"
+    token = "AQAAAABaRy6FAAd_m-5FbN1cO0tlm6zg6uICmd8"
     headers = {
         "Accept": "application/json",
         "Authorization": "OAuth " + token
@@ -37,11 +40,11 @@ def getHref(video):
     url = "https://cloud-api.yandex.net/v1/disk/resources/download"
     r = requests.get(url=url, params=params, headers=headers)
     res = r.json()
-    # print(json.dumps(r.json(), sort_keys=True, indent=4, ensure_ascii=False))
+    json.dumps(r.json(), sort_keys=True, indent=4, ensure_ascii=False)
 
     return res['href']
 
 
 
-# sendYandexScreencast("XiaomiRedmiNote9_P_cppk_12.11|12_11.mp4", "XiaomiRedmiNote9_P_dit_guest_wifi.mp4")
-# getHref()
+# sendYandexScreencast("XiaomiRedmiNote9_P_cppk_12.11_12_11.mp4", "XiaomiRedmiNote9_P_dit_guest_wifi.mp4")
+# # getHref()

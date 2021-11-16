@@ -36,21 +36,21 @@ if __name__ == "__main__":
     # Устренние тесты
 
     def startTestsXiaomiRedmi(number, mac, name):
-        # AutoTest(number, mac, name, '_P_metro')
+        AutoTest(number, mac, name, '_P_metro')
         AutoTest(number, mac, name, '_P_cppk')
-        # AutoTest(number, mac, name, '_P_MCC_incarnet')
-        # AutoTest(number, mac, name, '_P_aeroexpress')
-        # AutoTest(number, mac, name, '_p_mvf_bus')
-        # AutoTest(number, mac, name, '_P_Sola_Metrotelecom Free')
-        # # # # ЕОС
-        # AutoTest(number, mac, name, '_P_dit_enforta_street')
-        # AutoTest(number, mac, name, '_P_dit_akado')
-        # AutoTest(number, mac, name, '_P_dit_guest_wifi')
-        # AutoTest(number, mac, name, '_P_dit_Nauka 3')
-        # AutoTest(number, mac, name, '_P_dit_snb')
-        # AutoTest(number, mac, name, '_P_dit_almatel')
-        # AutoTest(number, mac, name, '_P_dit_beeline')
-        # AutoTest(number, mac, name, '_P_ttk_hospitals')
+        AutoTest(number, mac, name, '_P_MCC_incarnet')
+        AutoTest(number, mac, name, '_P_aeroexpress')
+        AutoTest(number, mac, name, '_p_mvf_bus')
+        AutoTest(number, mac, name, '_P_Sola_Metrotelecom Free')
+        # # # ЕОС
+        AutoTest(number, mac, name, '_P_dit_enforta_street')
+        AutoTest(number, mac, name, '_P_dit_akado')
+        AutoTest(number, mac, name, '_P_dit_guest_wifi')
+        AutoTest(number, mac, name, '_P_dit_Nauka 3')
+        AutoTest(number, mac, name, '_P_dit_snb')
+        AutoTest(number, mac, name, '_P_dit_almatel')
+        AutoTest(number, mac, name, '_P_dit_beeline')
+        AutoTest(number, mac, name, '_P_ttk_hospitals')
         # AutoTest(number, mac, name, '_P_dit_mts_vdnh')
 
 
@@ -92,7 +92,7 @@ if __name__ == "__main__":
         # AutoTest(number, mac, name, '_P_dit_mts_vdnh')
 
 
-    startTestsSamsung(number3, MAC3, Name3)
+    # startTestsSamsung(number3, MAC3, Name3)
     startTestsXiaomiRedmi(number2, MAC2, Name2)
     # startTestsSamsung(number3, MAC3, Name3)
 
