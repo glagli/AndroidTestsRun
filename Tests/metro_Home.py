@@ -1,4 +1,4 @@
-def AvtoTestMetro(ser, MAC, DevicesName):
+def AvtoTest(ser, MAC, DevicesName):
     import uiautomator2 as u2
     from time import sleep
     import Functions.CheckInternet

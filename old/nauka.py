@@ -14,11 +14,11 @@ def AvtoTestMetro (ser, MAC, DevicesName):
     with open("logs/buttonClick.txt", 'a', encoding='utf-8') as f:
 
         if DevicesName == "Samsung A32":
-            ssid = '_P_dit_guest_wifi'
-            name_video = 'P_dit_guest_wifi'
+            ssid = '_P_dit_Nauka 3'
+            name_video = 'P_dit_Nauka 3'
         else:
-            ssid = '_P_dit_guest_wifi'
-            name_video = 'P_dit_guest_wifi'
+            ssid = '_P_dit_Nauka 3'
+            name_video = 'P_dit_Nauka 3'
 
         flagBrowser = 0
         d = u2.connect_usb(ser)
@@ -39,6 +39,7 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                 d.shell("am start -n com.android.settings/com.android.settings.wifi.WifiSettings")  # Переход в настройки
                 WIFI = d(text='Wi-Fi', className='android.widget.TextView')
                 WIFI.click_exists(3)
+
 
             d.shell('svc wifi enable')  # Включение Wi-Fi
 
@@ -145,11 +146,11 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                     print(f"{NowDate()}  Нажат крестик вид №2")
                     f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                     sleep(5)
-                elif ButtonX3.exists:
-                    ButtonX3.click_exists(5)
-                    print(f"{NowDate()}  Нажат крестик №5 на портале")
-                    f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
-                    sleep(8)
+                # elif ButtonX3.exists:
+                #     ButtonX3.click_exists(5)
+                #     print(f"{NowDate()}  Нажат крестик №5 на портале")
+                #     f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
+                #     sleep(8)
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")
@@ -162,6 +163,12 @@ def AvtoTestMetro (ser, MAC, DevicesName):
 
             # тут пока не трогал
             assert final_check.exists or SsidName.exists, f"{NowDate()}  Авторизация не пройдена.Не найдена кнопка на новостном портале"
+            if final_check.exists:
+                print(f"{NowDate()}  Иконка на портале найдена")
+                f.write(f"{NowDate()}  Иконка на портале найдена\n")
+            else:
+                print(f"{NowDate()}  Иконка на портале не найдена")
+                f.write(f"{NowDate()}  Иконка на портале не найдена\n")
 
             # -- На портале
             if DevicesName != 'Samsung A32':
@@ -169,10 +176,10 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                 Galochka.click_exists(10)
                 print(f"{NowDate()}  Нажата галочка")
                 f.write(f"{NowDate()}  Нажата галочка\n")
-            flagBrowser = 1
             if Functions.CheckInternet.CheckInternet(d, DevicesName):
                 print(f"{NowDate()}  Доступ в интернет есть!")
                 f.write(f"{NowDate()}  Доступ в интернет есть! \n")
+                flagBrowser = 1
             else:
                 print(f"{NowDate()} Доступа в интернет нет! Скрипт принудительно завершен ")
                 f.write(f"{NowDate()} Доступа в интернет нет! Скрипт принудительно завершен \n")
@@ -199,6 +206,7 @@ def AvtoTestMetro (ser, MAC, DevicesName):
             print(f"{NowDate()}  Сессия убита ✅")
             print(f"_____________________________________________________________")
             f.write(f"{NowDate()}  Сессия убита ✅\n")
+            f.write(f"_____________________________________________________________\n")
             sleep(2)
             Send_screencast(f"screencasts/{DevicesName}_{name_video}.mp4", f'Скринкаст авторизация {DevicesName}\n{ssid}')
             sleep(10)

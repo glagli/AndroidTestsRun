@@ -11,14 +11,14 @@ def AvtoTestMetro (ser, MAC, DevicesName):
     from Functions.Sumsung import Connect_WiFi
     from Functions.FindSsid import scroll
 
-    with open("logs/buttonClick.txt", 'a', encoding='utf-8') as f:
+    with open("logs/buttonClick.txt", 'a+', encoding='utf-8') as f:
 
         if DevicesName == "Samsung A32":
-            ssid = '_P_dit_Nauka 3'
-            name_video = 'P_dit_Nauka 3'
+            ssid = '_P_dit_snb'
+            name_video = 'P_dit_snb'
         else:
-            ssid = '_P_dit_Nauka 3'
-            name_video = 'P_dit_Nauka 3'
+            ssid = '_P_dit_snb'
+            name_video = 'P_dit_snb'
 
         flagBrowser = 0
         d = u2.connect_usb(ser)
@@ -146,11 +146,11 @@ def AvtoTestMetro (ser, MAC, DevicesName):
                     print(f"{NowDate()}  Нажат крестик вид №2")
                     f.write(f"{NowDate()}  Нажат крестик вид №2\n")
                     sleep(5)
-                elif ButtonX3.exists:
-                    ButtonX3.click_exists(5)
-                    print(f"{NowDate()}  Нажат крестик №5 на портале")
-                    f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
-                    sleep(8)
+                # elif ButtonX3.exists:
+                #     ButtonX3.click_exists(5)
+                #     print(f"{NowDate()}  Нажат крестик №5 на портале")
+                #     f.write(f"{NowDate()}  Нажат крестик №5 на портале\n")
+                #     sleep(8)
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")
@@ -163,6 +163,12 @@ def AvtoTestMetro (ser, MAC, DevicesName):
 
             # тут пока не трогал
             assert final_check.exists or SsidName.exists, f"{NowDate()}  Авторизация не пройдена.Не найдена кнопка на новостном портале"
+            if final_check.exists:
+                print(f"{NowDate()}  Иконка на портале найдена")
+                f.write(f"{NowDate()}  Иконка на портале найдена\n")
+            else:
+                print(f"{NowDate()}  Иконка на портале не найдена")
+                f.write(f"{NowDate()}  Иконка на портале не найдена\n")
 
             # -- На портале
             if DevicesName != 'Samsung A32':
