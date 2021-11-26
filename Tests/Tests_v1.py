@@ -1,4 +1,4 @@
-def AutoTest(ser, mac, devices_name, ssid, name_video):
+def AutoTest(ser, mac, devices_name, ssid):
     import uiautomator2 as u2
     from time import sleep
     from time import time
@@ -16,6 +16,41 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
 
 
     time_start = time()
+    if devices_name == "Samsung A32" and ssid == 'MT_FREE':
+        ssid = ssid
+        name_video = "mt_free"
+    if ssid == '_P_metro':
+        name_video = 'metro'
+    if ssid == '_P_Sola_MT_507':
+        name_video = 'sola'
+    if ssid == '_P_cppk':
+        name_video = 'cppk'
+    if ssid == '_P_MCC_incarnet':
+        name_video = 'mcc'
+    if ssid == 'p_mvf_bus':
+        name_video = 'bus'
+    if ssid == '_P_aeroexpress':
+        name_video = 'aeroexpress'
+    if ssid == '_P_dit_enforta_street':
+        name_video = 'enforta'
+    if ssid == '_P_dit_akado':
+        name_video = 'akado'
+    if ssid == '_P_dit_guest_wifi':
+        name_video = 'guest'
+    if ssid == '_P_dit_guest_wifi':
+        name_video = 'guest'
+    if ssid == '_P_dit_Nauka 3':
+        name_video = 'nauka'
+    if ssid == '_P_dit_snb':
+        name_video = 'snb'
+    if ssid == '_P_dit_almatel':
+        name_video = 'almatel'
+    if ssid == '_P_dit_beeline':
+        name_video = 'beeline'
+    if ssid == '_P_ttk_hospitals':
+        name_video = 'hospitals'
+    if ssid == '_P_dit_mts_vdnh':
+        name_video = 'mts_vdnh'
 
     d = u2.connect_usb(ser)
     flag = 6
@@ -45,6 +80,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
 
             d.shell('svc wifi enable')  # Включение Wi-Fi
             d.screenrecord(f"screencasts/{devices_name}_{name_video}.mp4")  # Запуск записи экрана
+            sleep(5)
 
             # -- Подключение к SSID
             if devices_name == "Samsung A32":
@@ -121,9 +157,13 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
 
             # -- Чекер ошибки 400
             if d(text="Error 400: Bad Request").exists:
+                # -- Подключение к ssid
+                # d.shell("am start -a android.intent.action.VIEW  http://gowifi.ru")
                 print(f"{NowDate()}  Error 400: Bad Request")
                 f.write(f"{NowDate()}  Error 400: Bad Request\n")
                 SendMessage(f"{devices_name}: 🔥 {ssid}: Error 400: Bad Request")
+                # print(f"{NowDate()}  Авторизация через браузер")
+                # f.write(f"{NowDate()}  Авторизация через браузер\n")
                 err400 = True
                 check_err = True
                 # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
@@ -142,13 +182,17 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                 return
 
             # -- Нажатие на "Войти в интернет"
-
-            open_sixty_min = d.xpath('//*[@text="Войти в Интернет" or @text="Войти на 60 минут" or @text="Internetga kirish"]')
+            if ssid == 'MT_FREE' or ssid == '_P_metro':
+                open_sixty_min = d(text='Войти на 60 минут')
+            elif ssid == '_P_Sola_MT_507':
+                open_sixty_min = d(text='Internetga kirish')
+            else:
+                open_sixty_min = d(text='Войти в Интернет')
             open_sixty_min.wait(60)
             while flag != 0:
                 if open_sixty_min.exists:
                     # кнопка находится но неактивна в течении 5 сек. Нужен кликабле
-                    open_sixty_min.click_exists(20)
+                    open_sixty_min.click_gone(10, 3)
                     print(f"{NowDate()}  Нажата кнопка 'Войти в Интернет'")
                     f.write(f"{NowDate()}  Нажата кнопка 'Войти в Интернет'\n")
                     time_start_avtoriz = time()
@@ -177,9 +221,79 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
             err900 = d.xpath('//*[@text="Ошибка #900"]')
             err100 = d.xpath('//*[@text="Ошибка #100"]')
             errWebStr = d.xpath('//*[@text="Не удалось открыть веб-страницу"]')
-            button_continue = d.xpath('//*[@text="Продолжить" or @text="Далее"]')
 
-            # Назначения чекеров для сегментов
+            # До кнопки Продолжить/Далее (Только для метро)
+            if ssid == '_P_metro' or ssid == 'MT_FREE':
+                button_continue = d(text="Продолжить", className='android.widget.Button')
+                button_further = d(text="Далее", className='android.widget.Button')
+
+                for i in range(20):
+                    if button_continue.exists or button_further.exists:
+                        break
+                    elif err900.exists:
+                        print(f"{NowDate()} Ошибка 900.Скрипт завершен")
+                        f.write(f"{NowDate()} Ошибка 900.Скрипт завершен\n")
+                        SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 900")
+                        check_err = True
+                        # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                        addResult(ssid, devices_name, 1, "Error900", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
+                        return
+                    elif errWebStr.exists:
+                        print(f"{NowDate()} Ошибка Не удалось открыть веб-страницу.Скрипт завершен")
+                        f.write(f"{NowDate()} Ошибка Не удалось открыть веб-страницу.Скрипт завершен\n")
+                        SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка Не удалось открыть веб-страницу")
+                        check_err = True
+                        # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                        addResult(ssid, devices_name, 1, "err - web page not be opened",
+                                  f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
+                        return
+                    elif err100.exists:
+                        print(f"{NowDate()} Ошибка 100.Скрипт завершен")
+                        f.write(f"{NowDate()} Ошибка 100.Скрипт завершен\n")
+                        SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 100")
+                        check_err = True
+                        # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                        addResult(ssid, devices_name, 1, "Error100", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
+                        return
+                    elif button_x1.exists:
+                        button_x1.click_exists(5)
+                        print(f"{NowDate()}  Нажат крестик вид №1")
+                        f.write(f"{NowDate()}  Нажат крестик вид №1\n")
+                        flag2 -= 1
+                        sleep(6)
+                    elif button_x2.exists:
+                        d.click(0.940, 0.220)
+                        # button_x2.click_exists(5)
+                        print(f"{NowDate()}  Нажат крестик вид №2")
+                        f.write(f"{NowDate()}  Нажат крестик вид №2\n")
+                        flag2 -= 1
+                        sleep(6)
+                    elif flag2 == 1:
+                        print(f"{NowDate()} Кнопка 'Далее или Продолжить' не найдена.Скрипт принудительно завершен ")
+                        f.write(f"{NowDate()} Кнопка 'Далее или Продолжить' не найдена.Скрипт принудительно завершен\n")
+                        SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
+                        check_err = True
+                        # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
+                        addResult(ssid, devices_name, 1, "button Next not found", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
+                        return
+                    else:
+                        flag2 -= 1
+                        sleep(4)
+                        continue
+
+                if button_continue.exists:
+                    button_continue.click(1)
+                    print(f"{NowDate()}  Нажата кнопка Продолжить")
+                    f.write(f"{NowDate()}  Нажата кнопка Продолжить\n")
+                    sleep(6)
+                else:
+                    button_further = d(text="Далее", className='android.widget.Button')
+                    button_further.click()
+                    print(f"{NowDate()}  Нажата кнопка Далее")
+                    f.write(f"{NowDate()}  Нажата кнопка Далее\n")
+                    sleep(6)
+
+            # Назначения финал чеков для сегментов
             if 'dit' in ssid or ssid == '_P_ttk_hospitals':
                 if ssid == '_P_ttk_hospitals':
                     final_check = d(text="mos.ru – Официальный сайт Мэра Москвы")
@@ -194,7 +308,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                 final_check2 = d.xpath('//*[@text=""]')
                 final_check = d.xpath('//*[@content-desc="cabinet.wi-fi"]')
 
-            # Авторизация
+            # Авторизация до новостного портала
             while not (final_check.exists or final_check2.exists or ssid_name.exists):
                 if err900.exists:
                     print(f"{NowDate()} Ошибка 900.Скрипт завершен")
@@ -221,11 +335,6 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
                     addResult(ssid, devices_name, 1, "Error100", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                     return
-                elif button_continue.exists:
-                    button_continue.click(1)
-                    print(f"{NowDate()}  Нажата кнопка Продолжить/Далее")
-                    f.write(f"{NowDate()}  Нажата кнопка Продолжить/Далее\n")
-                    sleep(6)
                 elif button_x1.exists:
                     button_x1.click_exists(5)
                     flag2 -= 1
@@ -247,7 +356,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                         flag2 -= 1
                     print(f"{NowDate()}  Нажат крестик вид №2")
                     f.write(f"{NowDate()}  Нажат крестик вид №2\n")
-                    sleep(7)
+                    sleep(6)
                 elif button_x2.exists and button_x3.exists:
                     if devices_name == "XiaomiMi9":
                         # d.click(954, 500)
@@ -263,7 +372,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                         flag2 -= 1
                     print(f"{NowDate()}  Нажат крестик вид №3")
                     f.write(f"{NowDate()}  Нажат крестик вид №3\n")
-                    sleep(7)
+                    sleep(6)
                 elif flag2 == 1:
                     print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")

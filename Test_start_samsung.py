@@ -75,7 +75,7 @@ if __name__ == "__main__":
         # # AutoTest(number, mac, name, '_P_MCC_incarnet')  # -- Кептив на самсунге не всплывает
         # # AutoTest(number, mac, name, '_P_aeroexpress')  # -- Кептив на самсунге не всплывает
         # # AutoTest(number, mac, name, '_p_mvf_bus')
-        AutoTest(number, mac, name, '_P_Sola_Metrotelecom Free')
+        # AutoTest(number, mac, name, '_P_Sola_Metrotelecom Free')
         # ЕОС
         # AutoTest(number, mac, name, '_P_dit_enforta_street')
         # AutoTest(number, mac, name, '_P_dit_akado')

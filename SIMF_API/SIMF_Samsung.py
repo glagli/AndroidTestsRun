@@ -1,6 +1,6 @@
 import schedule
 from Functions.TelegramApi import SendMessage
-from SIMF_API import SIMF_STEND
+from SIMF_API import Tests
 from Functions.DataName import NowDate
 from time import sleep
 from schedule import every, repeat
@@ -10,9 +10,7 @@ if __name__ == "__main__":
     Schet.init()
     print(f"{NowDate()}  📣 :  Автотесты запущены📱")
     print(f"_____________________________________________________________")
-    with open("buttonClick.txt", 'w', encoding='utf-8') as f:
-        f.write(f"{NowDate()}  📣 :  Автотесты запущены🚀\n")
-        f.write(f"_____________________________________________________________\n")
+
 
     # f = open("logs/buttonClick2.txt", 'w', encoding='utf-8')
     # XiaomiMi9
@@ -38,22 +36,26 @@ if __name__ == "__main__":
     # @repeat(every(10).minutes, number1, MAC1, Name1)
     # @repeat(every(4).minutes, number3, MAC3, Name3)
 
-    def startTestsXiaomiRedmi (number, mac, name):
-        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
+    # def startTestsXiaomiRedmi (number, mac, name):
+    #     SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
+    #
+    #
+    # def startTestsXiaomiMi (number, mac, name):
+    #     SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
 
 
-    def startTestsXiaomiMi (number, mac, name):
-        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
-
-
-    @repeat(every(30).seconds, number3, MAC3, Name3)
+    # @repeat(every(30).seconds, number3, MAC3, Name3)
     def startTestsSamsung (number, mac, name):
-        SIMF_STEND.AvtoTestMetro(number, mac, name, "_P_AP_TEST105")
+        Tests.AutoTest(number, mac, name, '_P_dit_Nauka 3')
+        Tests.AutoTest(number, mac, name, '_P_dit_snb')
+        Tests.AutoTest(number, mac, name, '_P_dit_almatel')
+        Tests.AutoTest(number, mac, name, '_P_dit_beeline')
+        Tests.AutoTest(number, mac, name, "_P_ANAPA")
 
 
     startTestsSamsung(number3, MAC3, Name3)
 
 
-    while True:
-        schedule.run_pending()
-        sleep(1)
+    # while True:
+    #     schedule.run_pending()
+    #     sleep(1)

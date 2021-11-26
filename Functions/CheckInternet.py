@@ -13,7 +13,7 @@ def CheckInternet (d, DevicesName):
     t0 = time.time()
     d.shell("am start -a android.intent.action.VIEW  https://gb.ru/")
     google = d.xpath('//*[@content-desc="gb"]')
-    google.wait(30)
+    google.wait(20)
     check1 = google.exists
     t1 = time.time() - t0
 
@@ -22,7 +22,7 @@ def CheckInternet (d, DevicesName):
     t2 = time.time()
     d.shell("am start -a android.intent.action.VIEW  https://www.lenta.ru/")
     lenta = d.xpath('//*[@content-desc="На главную"]/android.widget.Image[1]')
-    lenta.wait(30)
+    lenta.wait(20)
     check2 = lenta.exists
     t3 = time.time() - t2
 

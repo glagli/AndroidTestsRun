@@ -152,6 +152,9 @@ if __name__ == "__main__":
     Send_File("logs/buttonClick.txt")
     print(f"{NowDate()}  📣 :  Автотесты завершены📱")
 
+
+
+
     # while True:
     #     schedule.run_pending()
     #     sleep(1)
