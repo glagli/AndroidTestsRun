@@ -10,14 +10,14 @@ def CheckInternet (d, DevicesName):
     d.press("home")
     sleep(2)
 
-    t0 = time.time()
-    d.shell("am start -a android.intent.action.VIEW  https://gb.ru/")
-    google = d.xpath('//*[@content-desc="gb"]')
-    google.wait(20)
-    check1 = google.exists
-    t1 = time.time() - t0
-
-    sleep(3)
+    # t0 = time.time()
+    # d.shell("am start -a android.intent.action.VIEW  https://gb.ru/")
+    # google = d.xpath('//*[@content-desc="gb"]')
+    # google.wait(10)
+    # check1 = google.exists
+    # t1 = time.time() - t0
+    #
+    # sleep(3)
 
     t2 = time.time()
     d.shell("am start -a android.intent.action.VIEW  https://www.lenta.ru/")
@@ -29,13 +29,13 @@ def CheckInternet (d, DevicesName):
 
     sleep(3)
 
-    if check1 or check2:
-        print(f"{NowDate()}  gb: {check1} | Время загрузки страницы: {round(t1,2)} сек")
+    if check2:
+        # print(f"{NowDate()}  gb: {check1} | Время загрузки страницы: {round(t1,2)} сек")
         print(f"{NowDate()}  Lenta: {check2} | Время загрузки страницы: {round(t3,2)} сек")
         BrowserChromeExit(d)
         return True
     else:
-        print(f"{NowDate()}  gb: {check1} | Страница не загрузилась")
+        # print(f"{NowDate()}  gb: {check1} | Страница не загрузилась")
         print(f"{NowDate()}  Lenta: {check2} | Страница не загрузилась")
         BrowserChromeExit(d)
         return False

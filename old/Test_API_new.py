@@ -8,7 +8,7 @@ from Tests.Tests import AutoTest
 if __name__ == "__main__":
     print(f"{NowDate()}  📣 :  Автотесты запущены📱")
     print(f"_____________________________________________________________")
-    with open("logs/buttonClick.txt", 'w', encoding='utf-8') as f:
+    with open("../logs/buttonClick.txt", 'w', encoding='utf-8') as f:
         f.write(f"{NowDate()}  📣 :  Автотесты запущены🚀\n")
         f.write(f"_____________________________________________________________\n")
 

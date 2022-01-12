@@ -35,11 +35,11 @@ if __name__ == "__main__":
         AutoTest(number, mac, name, '_P_dit_akado', 'akado')
         AutoTest(number, mac, name, '_P_dit_guest_wifi', 'guest')
         AutoTest(number, mac, name, '_P_dit_Nauka 3', 'nauka')
-        AutoTest(number, mac, name, '_P_dit_snb', 'snb')
+        # AutoTest(number, mac, name, '_P_dit_snb', 'snb')
         AutoTest(number, mac, name, '_P_dit_almatel', 'almatel')
         AutoTest(number, mac, name, '_P_dit_beeline', 'beeline')
         AutoTest(number, mac, name, '_P_ttk_hospitals', 'hospitals')
-        AutoTest(number, mac, name, '_P_dit_mts_vdnh', 'mts_vdnh')
+        # AutoTest(number, mac, name, '_P_dit_mts_vdnh', 'mts_vdnh')
 
 
 

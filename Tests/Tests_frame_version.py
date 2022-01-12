@@ -75,7 +75,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
             # -- Проверка не убитой сессии
             check_connect = d.xpath('//*[@text="Подключено"]')
             if check_connect.exists and ssid != "_P_ttk_hospitals":
-                print(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.")
+                print("\033[31m{}\033[0m".format(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен."))
                 f.write(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.\n")
                 SendMessage(f"{devices_name}: ⛔ {ssid}: Сессия не убита")
                 # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
@@ -96,7 +96,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                 print(f"{NowDate()}  Кептив открылся")
                 f.write(f"{NowDate()}  Кептив открылся\n")
             elif not ssid_name.exists:
-                print(f"{NowDate()}  SSID не найден.Тест завершен.")
+                print("\033[31m{}\033[0m".format(f"{NowDate()}  SSID не найден.Тест завершен."))
                 f.write(f"{NowDate()}  SSID не найден.Тест завершен.\n")
                 SendMessage(f"{devices_name}: ⛔ {ssid}: SSID не найден")
                 # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
@@ -105,13 +105,13 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
             else:
                 # -- Проверка не убитой сессии 2
                 if Functions.CheckInternet.CheckInternet(d, devices_name):
-                    print(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен."))
                     f.write(f"{NowDate()}  Предыдущая сессия не убита.Тест завершен.\n")
                     SendMessage(f"{devices_name}: ⛔ {ssid}: Сессия не убита")
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
                     addResult(ssid, devices_name, 2, "Active session", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                 else:
-                    print(f"{NowDate()}  Кептив не отработал.Тест завершен.")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()}  Кептив не отработал.Тест завершен."))
                     f.write(f"{NowDate()}  Кептив не отработал.Тест завершен.\n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
                     check_err = True
@@ -121,7 +121,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
 
             # -- Чекер ошибки 400
             if d(text="Error 400: Bad Request").exists:
-                print(f"{NowDate()}  Error 400: Bad Request")
+                print("\033[31m{}\033[0m".format(f"{NowDate()}  Error 400: Bad Request"))
                 f.write(f"{NowDate()}  Error 400: Bad Request\n")
                 SendMessage(f"{devices_name}: 🔥 {ssid}: Error 400: Bad Request")
                 err400 = True
@@ -133,7 +133,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
             # -- Чекер заглушки
             check_random = d.xpath('//*[@resource-id="changeSettings"]')
             if check_random.exists:
-                print(f"{NowDate()} Найдена заглушка для рандомного мас")
+                print("\033[31m{}\033[0m".format(f"{NowDate()} Найдена заглушка для рандомного мас"))
                 f.write(f"{NowDate()}  Найдена заглушка для рандомного мас\n")
                 SendMessage(f"{devices_name}: 🔥 {ssid}: Найдена заглушка для рандомного мас")
                 check_err = True
@@ -155,7 +155,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                     flag -= 1
                     break
                 if flag == 1:
-                    print(f"{NowDate()}  Кнопка 'Войти в Интернет' не найдена. Скрипт принудительно завершен ")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()}  Кнопка 'Войти в Интернет' не найдена. Скрипт принудительно завершен "))
                     f.write(f"{NowDate()}  Кнопка 'Войти в Интернет' не найдена. Скрипт принудительно завершен \n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Кнопка 'Войти в Интернет' не найдена. Скрипт завершен")
                     check_err = True
@@ -197,7 +197,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
             # Авторизация
             while not (final_check.exists or final_check2.exists or ssid_name.exists):
                 if err900.exists:
-                    print(f"{NowDate()} Ошибка 900.Скрипт завершен")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()} Ошибка 900.Скрипт завершен"))
                     f.write(f"{NowDate()} Ошибка 900.Скрипт завершен\n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 900")
                     check_err = True
@@ -205,8 +205,8 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                     addResult(ssid, devices_name, 1, "Error900", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                     return False
                 elif errWebStr.exists:
-                    print(f"{NowDate()}  Ошибка Не удалось открыть веб-страницу.Скрипт завершен")
-                    f.write(f"{NowDate()}  Ошибка Не удалось открыть веб-страницу.Скрипт завершен\n")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()} Ошибка Не удалось открыть веб-страницу.Скрипт завершен"))
+                    f.write(f"{NowDate()} Ошибка Не удалось открыть веб-страницу.Скрипт завершен\n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка Не удалось открыть веб-страницу")
                     check_err = True
                     # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
@@ -214,7 +214,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                               f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
                     return False
                 elif err100.exists:
-                    print(f"{NowDate()} Ошибка 100.Скрипт завершен")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()} Ошибка 100.Скрипт завершен"))
                     f.write(f"{NowDate()} Ошибка 100.Скрипт завершен\n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Ошибка 100")
                     check_err = True
@@ -265,7 +265,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                     f.write(f"{NowDate()}  Нажат крестик вид №3\n")
                     sleep(7)
                 elif flag2 == 1:
-                    print(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен ")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен "))
                     f.write(f"{NowDate()}  Иконка на портале не найдена. Скрипт принудительно завершен \n")
                     SendMessage(f"{devices_name}: 🔥 {ssid}: Неизвестная ошибка")
                     check_err = True
@@ -279,23 +279,18 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
 
             # Надо как то упростить
             if 'dit' in ssid or ssid == '_P_ttk_hospitals' or ssid == '_P_Sola_MT_507':
-                assert final_check.exists or ssid_name.exists, f"{NowDate()}  Авторизация не пройдена.Не найдена " \
-                                                               f"кнопка на новостном портале "
                 if final_check.exists:
                     print(f"{NowDate()}  Иконка на портале найдена")
                     f.write(f"{NowDate()}  Иконка на портале найдена\n")
                 else:
-                    print(f"{NowDate()}  Иконка на портале не найдена")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()}  Иконка на портале не найдена"))
                     f.write(f"{NowDate()}  Иконка на портале не найдена\n")
             else:
-                assert final_check.exists or final_check2.exists or ssid_name.exists, f"{NowDate()}  Авторизация не " \
-                                                                                      f"пройдена.Не найдена кнопка на" \
-                                                                                      f" новостном портале "
                 if final_check.exists or final_check2.exists:
                     print(f"{NowDate()}  Иконка на портале найдена")
                     f.write(f"{NowDate()}  Иконка на портале найдена\n")
                 else:
-                    print(f"{NowDate()}  Иконка на портале не найдена")
+                    print("\033[31m{}\033[0m".format(f"{NowDate()}  Иконка на портале не найдена"))
                     f.write(f"{NowDate()}  Иконка на портале не найдена\n")
 
             # -- На портале
@@ -317,7 +312,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                 print(f"{NowDate()}  Доступ в интернет есть!")
                 f.write(f"{NowDate()}  Доступ в интернет есть! \n")
             else:
-                print(f"{NowDate()} Доступа в интернет нет! Скрипт принудительно завершен ")
+                print("\033[31m{}\033[0m".format(f"{NowDate()} Доступа в интернет нет! Скрипт принудительно завершен "))
                 f.write(f"{NowDate()} Доступа в интернет нет! Скрипт принудительно завершен \n")
                 SendMessage(f"{devices_name}: 🔥 {ssid}: Доступа в интернет нет!")
                 check_err = True
@@ -327,19 +322,11 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
 
             # -- Финиш
             SendMessage(f"{devices_name}: 📣 {ssid}: Автотест успешно пройден ✅ ")
-            print(f"{NowDate()}  Автотест пройден ✅")
+            print("\033[32m{}\033[0m".format(f"{NowDate()}  Автотест пройден ✅"))
             f.write(f"{NowDate()}  Автотест пройден ✅ \n")
             # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
             addResult(ssid, devices_name, 0, "PASS", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
             return True
-
-        except AssertionError:
-            check_err = True
-            print(f"{NowDate()}  🔴 Автотест упал. Не найдена кнопка на новостном портале")
-            f.write(f"{NowDate()}  🔴 Автотест упал. Не найдена кнопка на новостном портале\n")
-            SendMessage(f"{devices_name}: 🔥 {ssid}: Автотест упал")
-            # result 0 - успешно \ 1 - ошибка \ 2 - сессия не убита \ 3 - падение теста
-            addResult(ssid, devices_name, 3, "AssertionError", f"{devices_name}_{name_video}_{datetime.now().strftime('%d.%m|%H_%M')}.mp4")
 
 
         finally:
