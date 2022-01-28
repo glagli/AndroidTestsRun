@@ -13,6 +13,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
     from Functions.LockDisplay import Lock
     from Functions.Sumsung import Connect_WiFi
     from Functions.pgconnect import addResult
+    import allure
 
 
     time_start = time()
@@ -36,12 +37,9 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
             if d(resourceId="miui:id/alertTitle").exists:
                 d.click(0.488, 0.902)
 
-            if devices_name == "Samsung A32":
-                Connect_WiFi(d)
-            else:
-                d.shell("am start -n com.android.settings/com.android.settings.wifi.WifiSettings")  # Переход в настр
-                wifi = d(text='Wi-Fi', className='android.widget.TextView')
-                wifi.click_exists(3)
+            d.shell("am start -n com.android.settings/com.android.settings.wifi.WifiSettings")  # Переход в настр
+            wifi = d(text='Wi-Fi', className='android.widget.TextView')
+            wifi.click_exists(3)
 
             d.shell('svc wifi enable')  # Включение Wi-Fi
             d.screenrecord(f"screencasts/{devices_name}_{name_video}.mp4")  # Запуск записи экрана
@@ -288,7 +286,7 @@ def AutoTest(ser, mac, devices_name, ssid, name_video):
                     sleep(5)
                     continue
 
-            # Проверка иконки на портале
+            # Надо как то упростить
             if 'dit' in ssid or ssid == '_P_ttk_hospitals' or ssid == '_P_Sola_MT_507':
                 if final_check.exists:
                     print(f"{NowDate()}  Иконка на портале найдена")
